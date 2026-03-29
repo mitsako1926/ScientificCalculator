@@ -3,7 +3,7 @@ package gui;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
-public class CalculatorFrame extends JFrame{
+public final class CalculatorFrame extends JFrame{
 	
 	
 	

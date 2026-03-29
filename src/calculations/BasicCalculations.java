@@ -30,7 +30,7 @@ public class BasicCalculations {
 		return Math.sqrt(number);
 	}
 	
-	public double sqaure(double number){
+	public double square(double number){
 		return Math.pow(number, 2);
 	}
 	

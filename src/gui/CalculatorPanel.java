@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,7 +17,7 @@ import javax.swing.JTextField;
 
 import calculations.BasicCalculations;
 
-public class CalculatorPanel extends JPanel{
+public final class CalculatorPanel extends JPanel{
 	
 	private JTextField textDisplay;
 	private JLabel historyLabel;
@@ -33,6 +34,9 @@ public class CalculatorPanel extends JPanel{
 	};
 	
 	private BasicCalculations calculator = new BasicCalculations();
+	
+	private double firstNumber,secondNumber;
+	private String operator,history;
 	
 	CalculatorPanel(){
 		
@@ -61,6 +65,7 @@ public class CalculatorPanel extends JPanel{
 		textDisplay.setBackground(Color.GRAY);
 		textDisplay.setForeground(Color.WHITE);
 		textDisplay.setBorder(null);
+		
 		
 		historyLabel = new JLabel();
 		historyLabel.setPreferredSize(new Dimension(400,100));
@@ -100,24 +105,9 @@ public class CalculatorPanel extends JPanel{
 		}
 		
 		
-		for(String text : buttons) {
-		    JButton button = new JButton(text);
-		    
-		    button.setFocusable(false);
-		    button.setBackground(Color.GRAY);
-		    button.setForeground(Color.WHITE);
-		    button.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 2, true)); // true = rounded
-		    button.setFont(new Font("Arial", Font.PLAIN, 20));
-		    button.addActionListener(e -> {
-		        if(actions.containsKey(text)) {
-		            actions.get(text).run();
-		        }
-		    });
-		    
-		    panelButtons.add(button);
-		}
-		
-		
+		Arrays.stream(buttons)
+			  .map(JButton::new)
+			  .forEach(button -> { customizeButton(button,actions); });
 		
 		
 		//ADDING THE 2 MAIN DISPLAY PANELS TO THE MAIN PANEL OF THE FRAME 
@@ -125,8 +115,19 @@ public class CalculatorPanel extends JPanel{
 		add(panelButtons,BorderLayout.SOUTH);
 	}
 	
+	private void customizeButton(JButton button,Map<String,Runnable> actions) {
+		button.setFocusable(false);
+	    button.setBackground(Color.GRAY);
+	    button.setForeground(Color.WHITE);
+	    button.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 2, true));
+	    button.setFont(new Font("Arial", Font.PLAIN, 20));
+	    button.addActionListener(e -> actions.get(button.getText()).run());
+	    panelButtons.add(button);
+	}
+	
 	private void clearAll() {
 	    textDisplay.setText("0");
+	    operator =null;
 	}
 
 	private void clearEntry() {
@@ -135,10 +136,13 @@ public class CalculatorPanel extends JPanel{
 	
 	private void deleteOperator() {
 		if(!textDisplay.getText().equals("0")) {
-			StringBuilder sb =new StringBuilder(textDisplay.getText());
+			StringBuilder sb = new StringBuilder(textDisplay.getText());
 			textDisplay.setText(sb.deleteCharAt(sb.length()-1).toString());
+			
 			if(textDisplay.getText().isBlank()) textDisplay.setText("0");
 		}
+		firstNumber = Double.parseDouble(textDisplay.getText());
+		
 	}
 
 	private void signOperator() {
@@ -151,14 +155,27 @@ public class CalculatorPanel extends JPanel{
 				}
 			}else textDisplay.setText("-" + textDisplay.getText());
 		}
+		if(operator==null) 
+			firstNumber = Double.parseDouble(textDisplay.getText());
+		else
+			secondNumber = Double.parseDouble(textDisplay.getText());
 	}
 	
 	private void appendNumber(int num) {
-	    if(textDisplay.getText().equals("0")) 
-	    	textDisplay.setText(String.valueOf(num));
-	    else 
-	        textDisplay.setText(textDisplay.getText() + num);
-	    
+	    if(operator==null) {
+	    	if(textDisplay.getText().equals("0")) 
+	    		textDisplay.setText(String.valueOf(num));
+	    	else 
+	        	textDisplay.setText(textDisplay.getText() + num);
+	    	firstNumber = Double.parseDouble(textDisplay.getText());
+	    }else {
+	    	history = textDisplay.getText();
+	    	if(textDisplay.getText().contains(operator)||textDisplay.getText().equals("0")) 
+	    		textDisplay.setText(String.valueOf(num));
+	    	else 
+	        	textDisplay.setText(textDisplay.getText() + num);
+	    	secondNumber = Double.parseDouble(textDisplay.getText());
+	    }
 	}
 
 	private void appendNumber(String dot) { 
@@ -170,24 +187,60 @@ public class CalculatorPanel extends JPanel{
 	}
 
 	private void setOperator(String op) {
-//		double result;
-//		switch(op) {
-//	    case "+": result = calculator.add(firstNumber, secondNumber); break;
-//	    case "-": result = calculator.subtract(firstNumber, secondNumber); break;
-//	    case "×": result = calculator.multiply(firstNumber, secondNumber); break;
-//	    case "÷": result = calculator.divide(firstNumber, secondNumber); break;
-//	}
+		operator = op;
+		if(textDisplay.getText().charAt(textDisplay.getText().length() - 1)=='.')textDisplay.setText(textDisplay.getText() +"0"); ;
+		textDisplay.setText(textDisplay.getText() +" " +op);
+		
 	}
 
 	private void calculate() {
-	    double secondNumber = Double.parseDouble(textDisplay.getText());
-	    double result = 0;
-
-	    
+		double result;
+		
+		switch(operator) {
+			case "+":	result = calculator.add(firstNumber, secondNumber);
+		    			textDisplay.setText(result+"");
+		    			operator = null;
+				break;
+			case "-":	result = calculator.subtract(firstNumber, secondNumber);
+		    			textDisplay.setText(result+"");
+		    			operator = null;
+				break;
+			case "×":	result = calculator.multiply(firstNumber, secondNumber);
+		    			textDisplay.setText(result+"");
+		    					operator = null;
+				break;
+			case "÷":	result = calculator.devide(firstNumber, secondNumber);
+		    			textDisplay.setText(result+"");
+		    			operator = null;
+				break;
+			case "%":	result = calculator.modular(firstNumber, secondNumber);
+		    			textDisplay.setText(result+"");
+		    			operator = null;
+				break;
+		}
+		firstNumber = Double.parseDouble(textDisplay.getText());
+		 
 	}
 
 	private void applyFunction(String func) {
+	    operator = func;
+	    double result;
 	    
+	    switch(operator) {
+	    	case "√":	result = calculator.squareRoot(firstNumber);
+	    				textDisplay.setText(result+"");
+	    				operator = null;
+			break;
+	    	case "x²":	result = calculator.square(firstNumber);
+	    				textDisplay.setText(result+"");
+	    				operator = null;
+			break;
+	    	case "1/x":	result = calculator.divideByNumber(firstNumber);
+	    				textDisplay.setText(result+"");
+	    				operator = null;
+			break;
+	    }
+	    firstNumber = Double.parseDouble(textDisplay.getText());
 	}
 
 	
