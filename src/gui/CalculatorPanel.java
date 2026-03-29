@@ -14,6 +14,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import calculations.BasicCalculations;
+
 public class CalculatorPanel extends JPanel{
 	
 	private JTextField textDisplay;
@@ -29,6 +31,8 @@ public class CalculatorPanel extends JPanel{
 	    "1","2","3","+",
 	    "±","0",".","=",
 	};
+	
+	private BasicCalculations calculator = new BasicCalculations();
 	
 	CalculatorPanel(){
 		
@@ -80,14 +84,14 @@ public class CalculatorPanel extends JPanel{
 		actions.put("-", () -> setOperator("-"));
 		actions.put("×", () -> setOperator("×"));
 		actions.put("÷", () -> setOperator("÷"));
-		actions.put("%", ()->setOperator("%"));
+		actions.put("%", () -> setOperator("%"));
 		actions.put("=", () -> calculate());
 		actions.put("x²", () -> applyFunction("x²"));
 		actions.put("1/x", () -> applyFunction("1/x"));
-		actions.put("√", ()->applyFunction("√"));
-		actions.put("±", ()->signOperator("±"));
+		actions.put("√", () -> applyFunction("√"));
+		actions.put("±", () -> signOperator());
 		actions.put(".", () -> appendNumber("."));
-		actions.put("del", ()->deleteOperator("del"));
+		actions.put("del", () -> deleteOperator());
 		
 
 		for(int i=0; i<=9; i++) {
@@ -121,12 +125,32 @@ public class CalculatorPanel extends JPanel{
 		add(panelButtons,BorderLayout.SOUTH);
 	}
 	
-	private Object deleteOperator(String string) {
-		return null;
+	private void clearAll() {
+	    textDisplay.setText("0");
 	}
 
-	private Object signOperator(String string) {
-		return null;
+	private void clearEntry() {
+	    textDisplay.setText("0");
+	}
+	
+	private void deleteOperator() {
+		if(!textDisplay.getText().equals("0")) {
+			StringBuilder sb =new StringBuilder(textDisplay.getText());
+			textDisplay.setText(sb.deleteCharAt(sb.length()-1).toString());
+			if(textDisplay.getText().isBlank()) textDisplay.setText("0");
+		}
+	}
+
+	private void signOperator() {
+		if(!textDisplay.getText().equals("0")) {
+			if(textDisplay.getText().contains("-")) {
+				StringBuilder sb =new StringBuilder(textDisplay.getText());
+				int index = sb.indexOf("-"); 
+				if(index != -1){
+				    textDisplay.setText(sb.deleteCharAt(index).toString());
+				}
+			}else textDisplay.setText("-" + textDisplay.getText());
+		}
 	}
 	
 	private void appendNumber(int num) {
@@ -146,7 +170,13 @@ public class CalculatorPanel extends JPanel{
 	}
 
 	private void setOperator(String op) {
-	    
+//		double result;
+//		switch(op) {
+//	    case "+": result = calculator.add(firstNumber, secondNumber); break;
+//	    case "-": result = calculator.subtract(firstNumber, secondNumber); break;
+//	    case "×": result = calculator.multiply(firstNumber, secondNumber); break;
+//	    case "÷": result = calculator.divide(firstNumber, secondNumber); break;
+//	}
 	}
 
 	private void calculate() {
@@ -160,13 +190,6 @@ public class CalculatorPanel extends JPanel{
 	    
 	}
 
-	private void clearAll() {
-	    textDisplay.setText("0");
-	}
-
-	private void clearEntry() {
-	    textDisplay.setText("0");
-	}
 	
 }
 
