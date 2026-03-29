@@ -1,5 +1,7 @@
 package gui;
 
-public class CalculatorPanel {
+import javax.swing.JPanel;
+
+public class CalculatorPanel extends JPanel{
 
 }
