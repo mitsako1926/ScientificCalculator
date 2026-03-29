@@ -8,6 +8,7 @@ import java.awt.GridLayout;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.OptionalDouble;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -20,7 +21,7 @@ import calculations.BasicCalculations;
 public final class CalculatorPanel extends JPanel{
 	
 	private JTextField textDisplay;
-	private JLabel historyLabel;
+	private JLabel historyLabelUp,historyLabelDown;
 	private JPanel panelDisplay;
 	private JPanel panelButtons;
 	
@@ -67,15 +68,24 @@ public final class CalculatorPanel extends JPanel{
 		textDisplay.setBorder(null);
 		
 		
-		historyLabel = new JLabel();
-		historyLabel.setPreferredSize(new Dimension(400,100));
-		historyLabel.setBackground(Color.GRAY);
-		historyLabel.setOpaque(true);
-		historyLabel.setForeground(Color.WHITE);
+		historyLabelUp = new JLabel();
+		historyLabelUp.setPreferredSize(new Dimension(400,50));
+		historyLabelUp.setBackground(Color.GRAY);
+		historyLabelUp.setOpaque(true);
+		historyLabelUp.setForeground(Color.WHITE);
+		historyLabelUp.setHorizontalAlignment(JLabel.RIGHT);
+		
+		historyLabelDown = new JLabel();
+		historyLabelDown.setPreferredSize(new Dimension(400,50));
+		historyLabelDown.setBackground(Color.GRAY);
+		historyLabelDown.setOpaque(true);
+		historyLabelDown.setForeground(Color.WHITE);
+		historyLabelDown.setHorizontalAlignment(JLabel.RIGHT);
 		
 		
 		//WE ADD THE COMPONENTS TO THE DISPLAY OF CALCULATIONS
-		panelDisplay.add(historyLabel,BorderLayout.NORTH);
+		panelDisplay.add(historyLabelUp,BorderLayout.NORTH);
+		panelDisplay.add(historyLabelDown,BorderLayout.CENTER);
 		panelDisplay.add(textDisplay,BorderLayout.SOUTH);
 		
 		
@@ -107,7 +117,7 @@ public final class CalculatorPanel extends JPanel{
 		
 		Arrays.stream(buttons)
 			  .map(JButton::new)
-			  .forEach(button -> { customizeButton(button,actions); });
+			  .forEach(button -> { customizeButton(button,actions); panelButtons.add(button);});
 		
 		
 		//ADDING THE 2 MAIN DISPLAY PANELS TO THE MAIN PANEL OF THE FRAME 
@@ -122,12 +132,13 @@ public final class CalculatorPanel extends JPanel{
 	    button.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 2, true));
 	    button.setFont(new Font("Arial", Font.PLAIN, 20));
 	    button.addActionListener(e -> actions.get(button.getText()).run());
-	    panelButtons.add(button);
 	}
 	
 	private void clearAll() {
 	    textDisplay.setText("0");
 	    operator =null;
+	    historyLabelUp.setText("");
+	    historyLabelDown.setText("");
 	}
 
 	private void clearEntry() {
@@ -135,11 +146,14 @@ public final class CalculatorPanel extends JPanel{
 	}
 	
 	private void deleteOperator() {
+		
 		if(!textDisplay.getText().equals("0")) {
+			
 			StringBuilder sb = new StringBuilder(textDisplay.getText());
 			textDisplay.setText(sb.deleteCharAt(sb.length()-1).toString());
 			
 			if(textDisplay.getText().isBlank()) textDisplay.setText("0");
+			
 		}
 		firstNumber = Double.parseDouble(textDisplay.getText());
 		
@@ -147,38 +161,51 @@ public final class CalculatorPanel extends JPanel{
 
 	private void signOperator() {
 		if(!textDisplay.getText().equals("0")) {
+			
 			if(textDisplay.getText().contains("-")) {
+				
 				StringBuilder sb =new StringBuilder(textDisplay.getText());
 				int index = sb.indexOf("-"); 
+				
 				if(index != -1){
 				    textDisplay.setText(sb.deleteCharAt(index).toString());
 				}
+				
 			}else textDisplay.setText("-" + textDisplay.getText());
 		}
+		
 		if(operator==null) 
 			firstNumber = Double.parseDouble(textDisplay.getText());
 		else
 			secondNumber = Double.parseDouble(textDisplay.getText());
+		
 	}
 	
+	
 	private void appendNumber(int num) {
-	    if(operator==null) {
-	    	if(textDisplay.getText().equals("0")) 
+	    
+		if(operator==null) {
+	    	
+			if(textDisplay.getText().equals("0")) 
 	    		textDisplay.setText(String.valueOf(num));
 	    	else 
 	        	textDisplay.setText(textDisplay.getText() + num);
 	    	firstNumber = Double.parseDouble(textDisplay.getText());
+	    	
 	    }else {
-	    	history = textDisplay.getText();
+
 	    	if(textDisplay.getText().contains(operator)||textDisplay.getText().equals("0")) 
 	    		textDisplay.setText(String.valueOf(num));
 	    	else 
 	        	textDisplay.setText(textDisplay.getText() + num);
 	    	secondNumber = Double.parseDouble(textDisplay.getText());
+	    	
 	    }
 	}
 
+	
 	private void appendNumber(String dot) { 
+		
 	    if(textDisplay.getText().equals("0")) {
 	        textDisplay.setText("0" + dot);
 	    } else if(!textDisplay.getText().contains(".")) {
@@ -186,64 +213,86 @@ public final class CalculatorPanel extends JPanel{
 	    }
 	}
 
+	
 	private void setOperator(String op) {
 		operator = op;
-		if(textDisplay.getText().charAt(textDisplay.getText().length() - 1)=='.')textDisplay.setText(textDisplay.getText() +"0"); ;
+		
+		if(textDisplay.getText().charAt(textDisplay.getText().length() - 1)=='.') textDisplay.setText(textDisplay.getText() +"0");
+		
 		textDisplay.setText(textDisplay.getText() +" " +op);
+		//historyLabelUp.setText(historyLabelDown.getText());
+		historyLabelDown.setText(textDisplay.getText());
 		
-	}
-
-	private void calculate() {
-		double result;
-		
-		switch(operator) {
-			case "+":	result = calculator.add(firstNumber, secondNumber);
-		    			textDisplay.setText(result+"");
-		    			operator = null;
-				break;
-			case "-":	result = calculator.subtract(firstNumber, secondNumber);
-		    			textDisplay.setText(result+"");
-		    			operator = null;
-				break;
-			case "×":	result = calculator.multiply(firstNumber, secondNumber);
-		    			textDisplay.setText(result+"");
-		    					operator = null;
-				break;
-			case "÷":	result = calculator.devide(firstNumber, secondNumber);
-		    			textDisplay.setText(result+"");
-		    			operator = null;
-				break;
-			case "%":	result = calculator.modular(firstNumber, secondNumber);
-		    			textDisplay.setText(result+"");
-		    			operator = null;
-				break;
-		}
-		firstNumber = Double.parseDouble(textDisplay.getText());
-		 
-	}
-
-	private void applyFunction(String func) {
-	    operator = func;
-	    double result;
-	    
-	    switch(operator) {
-	    	case "√":	result = calculator.squareRoot(firstNumber);
-	    				textDisplay.setText(result+"");
-	    				operator = null;
-			break;
-	    	case "x²":	result = calculator.square(firstNumber);
-	    				textDisplay.setText(result+"");
-	    				operator = null;
-			break;
-	    	case "1/x":	result = calculator.divideByNumber(firstNumber);
-	    				textDisplay.setText(result+"");
-	    				operator = null;
-			break;
-	    }
-	    firstNumber = Double.parseDouble(textDisplay.getText());
 	}
 
 	
+	private void calculate() {
+		double result=0;
+		
+		switch(operator) {
+			case "+":	result = calculator.add(firstNumber, secondNumber);
+				break;
+			case "-":	result = calculator.subtract(firstNumber, secondNumber);
+				break;
+			case "×":	result = calculator.multiply(firstNumber, secondNumber);
+				break;
+			case "÷":	result = calculator.devide(firstNumber, secondNumber);
+				break;
+			case "%":	result = calculator.modular(firstNumber, secondNumber);
+				break;
+		}
+		
+		textDisplay.setText(result+"");
+		operator = null;
+		firstNumber = Double.parseDouble(textDisplay.getText());
+		
+		if(history!=null && history.contains("=")) {
+			historyLabelUp.setText(history);
+		}
+		historyLabelDown.setText(historyLabelDown.getText() +secondNumber+ " = " +textDisplay.getText());
+		history = historyLabelDown.getText(); 
+	}
+
+	
+	private void applyFunction(String func) {
+	    historyLabelUp.setText(historyLabelDown.getText());
+	    OptionalDouble result;
+
+	    switch(func) {
+
+	        case "√":
+	            result = OptionalDouble.of(calculator.squareRoot(firstNumber));
+	            historyLabelDown.setText("√" + firstNumber + " = ");
+	            break;
+
+	        case "x²":
+	            result = OptionalDouble.of(calculator.square(firstNumber));
+	            historyLabelDown.setText(firstNumber + "² = ");
+	            break;
+
+	        case "1/x":
+	            result = calculator.divideByNumber(firstNumber);
+
+	            if(result.isEmpty()) {
+	                historyLabelDown.setText("1/" + firstNumber + " = ?");
+	                textDisplay.setText("Cannot divide by zero");
+	                firstNumber = 0;
+	                return;
+	            }
+
+	            historyLabelDown.setText("1/" + firstNumber + " = ");
+	            break;
+	        default:
+	            return;
+	    }
+
+	    double value = result.getAsDouble();
+
+	    historyLabelDown.setText(historyLabelDown.getText() + value);
+	    textDisplay.setText(String.valueOf(value));
+	    firstNumber = value;
+	}
+
 }
 
 

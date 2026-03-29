@@ -1,6 +1,8 @@
 package calculations;
 
-public class BasicCalculations {
+import java.util.OptionalDouble;
+
+public final class BasicCalculations {
 
 	public BasicCalculations(){
 		
@@ -34,12 +36,8 @@ public class BasicCalculations {
 		return Math.pow(number, 2);
 	}
 	
-	public double divideByNumber(double number){
-		return  (number!=0) ? 1/number : 0;
-	}
-	
-	public double equals(double firstNumber,double secondNumber){
-		return firstNumber / secondNumber;
+	public OptionalDouble divideByNumber(double number){
+		return  (number!=0) ? OptionalDouble.of(1/number) : OptionalDouble.empty();
 	}
 	
 }
