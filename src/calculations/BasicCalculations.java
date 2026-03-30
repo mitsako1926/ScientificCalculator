@@ -4,9 +4,6 @@ import java.util.OptionalDouble;
 
 public final class BasicCalculations {
 
-	public BasicCalculations(){
-		
-	}
 	
 	public double add(double firstNumber,double secondNumber){
 		return firstNumber + secondNumber;

@@ -1,7 +1,12 @@
 package gui;
 
-import java.awt.Component;
+import java.awt.Dimension;
 
-public class CalculatorSettingsPanel extends Component {
+import javax.swing.JPanel;
 
+public class CalculatorSettingsPanel extends JPanel {
+	
+	CalculatorSettingsPanel(){
+		setPreferredSize(new Dimension(350,450));
+	}
 }

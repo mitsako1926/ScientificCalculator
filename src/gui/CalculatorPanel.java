@@ -26,7 +26,7 @@ public final class CalculatorPanel extends JPanel{
 	private JPanel panelButtons;
 	
 	private String[] buttons = {
-	    "%","CE","C","del",
+	    "%","≡","C","del",
 		"1/x","x²","√","÷",
 	    "7","8","9","×",
 	    "4","5","6","-",
@@ -94,7 +94,7 @@ public final class CalculatorPanel extends JPanel{
 		Map<String, Runnable> actions = new HashMap<>();
 
 		actions.put("C", () -> clearAll());
-		actions.put("CE", () -> settings());
+		actions.put("≡", () -> settings());
 		actions.put("+", () -> setOperator("+"));
 		actions.put("-", () -> setOperator("-"));
 		actions.put("×", () -> setOperator("×"));
@@ -123,6 +123,11 @@ public final class CalculatorPanel extends JPanel{
 		//ADDING THE 2 MAIN DISPLAY PANELS TO THE MAIN PANEL OF THE FRAME 
 		add(panelDisplay,BorderLayout.NORTH);
 		add(panelButtons,BorderLayout.SOUTH);
+		
+		//problima me to NaN se polla koumpia
+		//pos fenonte oi arithmoi (ola einai double enw de prepei)
+		//5x6 meta an patiso operator prpei na diksei to history 5x6=30 kai to text 30x
+		//50x2 meta riza. Prepei na pigenei h riza sto 2
 	}
 	
 	private void customizeButton(JButton button,Map<String,Runnable> actions) {
@@ -137,49 +142,82 @@ public final class CalculatorPanel extends JPanel{
 	private void clearAll() {
 	    textDisplay.setText("0");
 	    operator =null;
+	    firstNumber = secondNumber =0;
 	    historyLabelUp.setText("");
 	    historyLabelDown.setText("");
 	}
-
+	
 	private void settings() {
-	    textDisplay.setText("0");
-	    
+	    //new CalculatorSettingsFrame();
 	}
+
 	
 	private void deleteOperator() {
-		
-		if(!textDisplay.getText().equals("0")) {
+		if(operator==null) {
 			
-			StringBuilder sb = new StringBuilder(textDisplay.getText());
-			textDisplay.setText(sb.deleteCharAt(sb.length()-1).toString());
+			if(!(textDisplay.getText().equals("0")||textDisplay.getText().equals("-0"))) {
+				
+				StringBuilder sb = new StringBuilder(textDisplay.getText());
+				textDisplay.setText(sb.deleteCharAt(sb.length()-1).toString());//epanalambanw
+				
+				String text = textDisplay.getText();
+				if(text.isBlank() || text.equals("-")) {
+				    textDisplay.setText("0");
+				}
+				
+				firstNumber = Double.parseDouble(textDisplay.getText());
+				
+			}else textDisplay.setText("0");
 			
-			if(textDisplay.getText().isBlank()) textDisplay.setText("0");
+		}else {
+			
+			if(!textDisplay.getText().contains(operator)) {
+
+				StringBuilder sb =new StringBuilder(textDisplay.getText());				
+				textDisplay.setText(sb.deleteCharAt(sb.length()-1).toString());
+				
+				if(textDisplay.getText().isBlank()) textDisplay.setText("0");
+				secondNumber = Double.parseDouble(textDisplay.getText());
+				
+			}else {
+				StringBuilder sb =new StringBuilder(textDisplay.getText());				
+				textDisplay.setText(sb.deleteCharAt(sb.indexOf(operator)).toString());
+				operator =null;
+			}
 			
 		}
-		firstNumber = Double.parseDouble(textDisplay.getText());
 		
 	}
 
+	
 	private void signOperator() {
-		if(!textDisplay.getText().equals("0")) {
+		if(operator==null) {
 			
 			if(textDisplay.getText().contains("-")) {
 				
-				StringBuilder sb =new StringBuilder(textDisplay.getText());
-				int index = sb.indexOf("-"); 
-				
-				if(index != -1){
-				    textDisplay.setText(sb.deleteCharAt(index).toString());
-				}
-				
+				StringBuilder sb =new StringBuilder(textDisplay.getText());				
+				textDisplay.setText(sb.deleteCharAt(sb.indexOf("-")).toString());
+			 
 			}else textDisplay.setText("-" + textDisplay.getText());
-		}
-		
-		if(operator==null) 
+			
 			firstNumber = Double.parseDouble(textDisplay.getText());
-		else
-			secondNumber = Double.parseDouble(textDisplay.getText());
-		
+			
+		} else {
+			
+			if(!textDisplay.getText().contains(operator)) {
+				
+				if(textDisplay.getText().contains("-")) {
+					
+					StringBuilder sb =new StringBuilder(textDisplay.getText());				
+					textDisplay.setText(sb.deleteCharAt(sb.indexOf("-")).toString());
+				 
+				}else textDisplay.setText("-" + textDisplay.getText());
+				
+				secondNumber = Double.parseDouble(textDisplay.getText());
+				
+			}else return;
+		}
+
 	}
 	
 	
@@ -187,7 +225,7 @@ public final class CalculatorPanel extends JPanel{
 	    
 		if(operator==null) {
 	    	
-			if(textDisplay.getText().equals("0")) 
+			if(textDisplay.getText().equals("0")||textDisplay.getText().equals("-0")) 
 	    		textDisplay.setText(String.valueOf(num));
 	    	else 
 	        	textDisplay.setText(textDisplay.getText() + num);
@@ -216,11 +254,15 @@ public final class CalculatorPanel extends JPanel{
 
 	
 	private void setOperator(String op) {
+		
+		if(operator!=null) return;//edw tha ginei h douleia
+		
 		operator = op;
 		
-		if(textDisplay.getText().charAt(textDisplay.getText().length() - 1)=='.') textDisplay.setText(textDisplay.getText() +"0");
+		if(textDisplay.getText().charAt(textDisplay.getText().length() - 1)=='.') 
+			textDisplay.setText(textDisplay.getText() +"0");
 		
-		textDisplay.setText(textDisplay.getText() +" " +op);
+		textDisplay.setText(textDisplay.getText() +op);
 		historyLabelDown.setText(textDisplay.getText());
 		
 	}
@@ -228,7 +270,7 @@ public final class CalculatorPanel extends JPanel{
 	
 	private void calculate() {
 		double result=0;
-		
+		if(operator==null) return;
 		switch(operator) {
 			case "+":	result = calculator.add(firstNumber, secondNumber);
 				break;
@@ -257,7 +299,8 @@ public final class CalculatorPanel extends JPanel{
 	private void applyFunction(String func) {
 	    historyLabelUp.setText(historyLabelDown.getText());
 	    OptionalDouble result;
-
+	    operator =null;//edw tha ginei h douleia
+	    
 	    switch(func) {
 
 	        case "√":
