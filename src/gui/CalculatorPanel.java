@@ -94,7 +94,7 @@ public final class CalculatorPanel extends JPanel{
 		Map<String, Runnable> actions = new HashMap<>();
 
 		actions.put("C", () -> clearAll());
-		actions.put("CE", () -> clearEntry());
+		actions.put("CE", () -> settings());
 		actions.put("+", () -> setOperator("+"));
 		actions.put("-", () -> setOperator("-"));
 		actions.put("×", () -> setOperator("×"));
@@ -141,8 +141,9 @@ public final class CalculatorPanel extends JPanel{
 	    historyLabelDown.setText("");
 	}
 
-	private void clearEntry() {
+	private void settings() {
 	    textDisplay.setText("0");
+	    
 	}
 	
 	private void deleteOperator() {
@@ -220,7 +221,6 @@ public final class CalculatorPanel extends JPanel{
 		if(textDisplay.getText().charAt(textDisplay.getText().length() - 1)=='.') textDisplay.setText(textDisplay.getText() +"0");
 		
 		textDisplay.setText(textDisplay.getText() +" " +op);
-		//historyLabelUp.setText(historyLabelDown.getText());
 		historyLabelDown.setText(textDisplay.getText());
 		
 	}
@@ -249,7 +249,7 @@ public final class CalculatorPanel extends JPanel{
 		if(history!=null && history.contains("=")) {
 			historyLabelUp.setText(history);
 		}
-		historyLabelDown.setText(historyLabelDown.getText() +secondNumber+ " = " +textDisplay.getText());
+		historyLabelDown.setText(historyLabelDown.getText() +" "+secondNumber+ " = " +textDisplay.getText());
 		history = historyLabelDown.getText(); 
 	}
 
