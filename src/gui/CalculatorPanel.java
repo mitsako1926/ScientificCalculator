@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +25,8 @@ public final class CalculatorPanel extends JPanel{
 	private JLabel historyLabelUp,historyLabelDown;
 	private JPanel panelDisplay;
 	private JPanel panelButtons;
+	
+	private DecimalFormat df = new DecimalFormat("###.#############");
 	
 	private String[] buttons = {
 	    "%","≡","C","del",
@@ -237,6 +240,7 @@ public final class CalculatorPanel extends JPanel{
 	    		textDisplay.setText(String.valueOf(num));
 	    	else 
 	        	textDisplay.setText(textDisplay.getText() + num);
+	    	
 	    	secondNumber = Double.parseDouble(textDisplay.getText());
 	    	
 	    }
@@ -260,7 +264,7 @@ public final class CalculatorPanel extends JPanel{
 		operator = op;
 		
 		if(textDisplay.getText().charAt(textDisplay.getText().length() - 1)=='.') 
-			textDisplay.setText(textDisplay.getText() +"0");
+			deleteOperator();
 		
 		textDisplay.setText(textDisplay.getText() +op);
 		historyLabelDown.setText(textDisplay.getText());
@@ -283,15 +287,15 @@ public final class CalculatorPanel extends JPanel{
 			case "%":	result = calculator.modular(firstNumber, secondNumber);
 				break;
 		}
-		
-		textDisplay.setText(result+"");
+
+		textDisplay.setText(df.format(result)+"");
 		operator = null;
 		firstNumber = Double.parseDouble(textDisplay.getText());
 		
 		if(history!=null && history.contains("=")) {
 			historyLabelUp.setText(history);
 		}
-		historyLabelDown.setText(historyLabelDown.getText() +" "+secondNumber+ " = " +textDisplay.getText());
+		historyLabelDown.setText(historyLabelDown.getText() +df.format(secondNumber)+ " = " +textDisplay.getText());
 		history = historyLabelDown.getText(); 
 	}
 
@@ -305,25 +309,25 @@ public final class CalculatorPanel extends JPanel{
 
 	        case "√":
 	            result = OptionalDouble.of(calculator.squareRoot(firstNumber));
-	            historyLabelDown.setText("√" + firstNumber + " = ");
+	            historyLabelDown.setText("√" + df.format(firstNumber) + " = ");
 	            break;
 
 	        case "x²":
 	            result = OptionalDouble.of(calculator.square(firstNumber));
-	            historyLabelDown.setText(firstNumber + "² = ");
+	            historyLabelDown.setText(df.format(firstNumber) + "² = ");
 	            break;
 
 	        case "1/x":
 	            result = calculator.divideByNumber(firstNumber);
 
 	            if(result.isEmpty()) {
-	                historyLabelDown.setText("1/" + firstNumber + " = ?");
+	                historyLabelDown.setText("1/" + df.format(firstNumber) + " = ?");
 	                textDisplay.setText("Cannot divide by zero");
 	                firstNumber = 0;
 	                return;
 	            }
 
-	            historyLabelDown.setText("1/" + firstNumber + " = ");
+	            historyLabelDown.setText("1/" + df.format(firstNumber) + " = ");
 	            break;
 	        default:
 	            return;
@@ -331,8 +335,8 @@ public final class CalculatorPanel extends JPanel{
 
 	    double value = result.getAsDouble();
 
-	    historyLabelDown.setText(historyLabelDown.getText() + value);
-	    textDisplay.setText(String.valueOf(value));
+	    historyLabelDown.setText(historyLabelDown.getText() + df.format(value));
+	    textDisplay.setText(String.valueOf(df.format(value)));
 	    firstNumber = value;
 	}
 
