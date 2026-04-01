@@ -7,7 +7,7 @@ import calculations.BasicCalculations;
 public final class CalculatorEngine{
 	
 	
-	private DecimalFormat df = new DecimalFormat("###.#######################");
+	private DecimalFormat df = new DecimalFormat("###.#################");
 	
 	private BasicCalculations calculator = new BasicCalculations();
 	
@@ -20,13 +20,11 @@ public final class CalculatorEngine{
 
 	
 //  PROBLEMS:
-//	SIGN OPERATOR
-//	
-//	
-//	
-//	
-//	
-//	
+//	(38x) meta to x bazw - sto 38 (-38x) kai meta pataw 1 ginete 38 kai oxi -38
+//	Error + function h + operstor + mporw na balw prosimo sto error
+//	NaN kai delete
+//  na min kanw polla delete thelei fix
+
 	
 	public String getDisplay() {
 	    return display;
@@ -95,8 +93,11 @@ public final class CalculatorEngine{
 	        
 	    	display = num;
 	        startNewNumber = false;
-	    } 
-	    else display += num;
+	    } else if(!startNewNumber&&(display.equals("0")||display.equals("-0"))){ // startNewNumber=false
+	    	display = num;
+	    	startNewNumber = false;
+	    }else  display += num;
+	    
 
 	}
 	
@@ -128,9 +129,9 @@ public final class CalculatorEngine{
 	
 	private void setOperator(String op) {
 
-	    if(operator != null && !startNewNumber) {
-	        calculate();
-	    }
+	    if(operator != null && !startNewNumber) calculate();
+	    
+	    if(operator != null && startNewNumber) return;
 
 	    firstNumber = Double.parseDouble(display);
 	    operator = op;
@@ -163,14 +164,17 @@ public final class CalculatorEngine{
 	    historyDown = "";
 	    firstNumber = result;
 	    operator = null;
-	    startNewNumber = true;
 	}
 	
 	
 	private void delete() {
 
-	    if(startNewNumber) return;
-
+	    if(startNewNumber && operator!=null) {
+	    	display = display.substring(0, display.length() - 1);
+	    	operator =null;
+	    	return;
+	    }
+	    
 	    if(display.length() == 1 || display.equals("-")) {
 	        display = "0";
 	        startNewNumber = true;
@@ -190,20 +194,74 @@ public final class CalculatorEngine{
 	    } else {
 	        display = "-" + display;
 	    }
+	    
 	}
 	
-	
+
+//thelw na brw alo pio clean tropo pou na kanei to idio pragma 
 	private void applyFunction(String func) {
 
+		if(operator!=null) {
+		    double number = Double.parseDouble(display);
+		    double result = 0;
+		    
+		    switch(func) {
+
+		        case "√":
+		            if(number < 0) {
+		                display = "Error";
+		                startNewNumber = true;
+		                firstNumber = 0;
+		        	    secondNumber = 0;
+		        	    operator = null;
+		                historyDown = "√(" + df.format(number) + ") = Error";
+		                return;
+		            }
+		            result = calculator.squareRoot(number);
+		            display=df.format(result);
+		            break;
+
+		        case "x²":
+		            result = calculator.square(number);
+		            display=df.format(result);
+		            break;
+
+		        case "1/x":
+		            if(number == 0) {
+		                display = "Error";
+		                startNewNumber = true;
+		                firstNumber = 0;
+		        	    secondNumber = 0;
+		        	    operator = null;
+		        	    historyDown = "1/(" + df.format(number) + ") = Error";
+		                return;
+		            }
+		            result = calculator.divideByNumber(number);
+		            display=df.format(result);
+		            break;
+
+		        default:
+		            return;
+		    
+		    }
+		    calculate();
+		    return;
+		}
+		
+		
 	    double number = Double.parseDouble(display);
 	    double result = 0;
-
+	    
 	    switch(func) {
 
 	        case "√":
 	            if(number < 0) {
 	                display = "Error";
 	                startNewNumber = true;
+	                firstNumber = 0;
+	        	    secondNumber = 0;
+	        	    operator = null;
+	                historyDown = "√(" + df.format(number) + ") = Error";
 	                return;
 	            }
 	            result = calculator.squareRoot(number);
@@ -221,6 +279,10 @@ public final class CalculatorEngine{
 	            if(number == 0) {
 	                display = "Error";
 	                startNewNumber = true;
+	                firstNumber = 0;
+	        	    secondNumber = 0;
+	        	    operator = null;
+	        	    historyDown = "1/(" + df.format(number) + ") = Error";
 	                return;
 	            }
 	            result = calculator.divideByNumber(number);
@@ -234,8 +296,8 @@ public final class CalculatorEngine{
 
 	    display = df.format(result);
 	    firstNumber = result;
-	    startNewNumber = true;
 	}
 
+	
 }
 
