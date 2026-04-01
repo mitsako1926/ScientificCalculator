@@ -33,8 +33,10 @@ public final class BasicCalculations {
 		return Math.pow(number, 2);
 	}
 	
-	public OptionalDouble divideByNumber(double number){
-		return  (number!=0) ? OptionalDouble.of(1/number) : OptionalDouble.empty();
+	public double divideByNumber(double number){
+		if(number!=0) return 1/number;
+		else throw new NumberFormatException();
+
 	}
 	
 }
