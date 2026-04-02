@@ -20,14 +20,10 @@ public final class CalculatorEngine{
 
 	
 //  PROBLEMS:
-//	(38x) meta to x bazw - sto 38 (-38x) kai meta pataw 1 ginete 38 kai oxi -38
-//  na xiristoume to apiro
-
 	
 //  IMPROVEMENTS:
-//  NaN thelw na to xriziome na blepw apo pou tha bgei oste na kanw to startNewNumber false klp. Na min checkarw kathe fora to diplay an einai NaN
-//  Thelw na ftiaksw to kodika ths applyFunction kai ths delete 
-//  Na baloume , anamse stis xiliades
+//  Thelw na ftiaksw to kodika ths applyFunction , calculate kai ths delete 
+//  Na baloume , anamesa stis xiliades
 	
 	
 	public String getDisplay() {
@@ -139,8 +135,12 @@ public final class CalculatorEngine{
 	    firstNumber = Double.parseDouble(display);
 	    operator = op;
 	    historyDown = df.format(firstNumber) + " " + op;
+	    
+	    if(display.endsWith("."))display = display.substring(0, display.length() - 1);
+	    
 	    display+=op;
 	    startNewNumber = true;
+	    
 	}
 	
 	
@@ -160,6 +160,16 @@ public final class CalculatorEngine{
 	        case "%": result = calculator.modular(firstNumber, secondNumber); break;
 	    }
 
+	    if(df.format(result).equals("∞")||df.format(result).equals("-∞")) {
+	    	historyUp = historyDown + " " + df.format(secondNumber) + " = Error";
+	    	display = "Error";
+	    	historyDown = "";
+		    firstNumber = 0;
+		    operator = null;
+		    startNewNumber = true;
+		    return;
+	    }
+	    
 	    historyUp = historyDown + " " + df.format(secondNumber) + " = "+df.format(result);
 	    display = df.format(result);
 	    historyDown = "";
@@ -172,10 +182,12 @@ public final class CalculatorEngine{
 		
 	    if(startNewNumber && operator!=null) {
 	    	
-	    	if(display.equals("0") && display.length()==1)return;
+	    	if(display.equals("0"))return;
 	    	
 	    	display = display.substring(0, display.length() - 1);
+	    	startNewNumber = false;
 	    	operator =null;
+	    	historyDown = historyDown.substring(0, historyDown.length()-1);
 	    	return;
 	    }
 	    
@@ -184,8 +196,6 @@ public final class CalculatorEngine{
 	        startNewNumber = true;
 	        return;
 	    }
-	    
-	    
 
 	    display = display.substring(0, display.length() - 1);
 	}
@@ -195,11 +205,24 @@ public final class CalculatorEngine{
 
 	    if(display.equals("0")||display.equals("Error")||display.equals("NaN")) return;
 
-	    if(display.startsWith("-")) {
-	        display = display.substring(1);
-	    } else {
-	        display = "-" + display;
+	    if(operator!=null&&startNewNumber) {
+	    	
+	    	if(display.startsWith("-")) {
+	    		display = display.substring(1);
+	    		historyDown = historyDown.substring(1);
+	    		
+	    	}else {
+	    		display = "-" + display;
+	    		historyDown = "-"+historyDown;
+	    	}
+	    	
+	    	firstNumber = -firstNumber;
+	    	return;
 	    }
+	    
+	    if(display.startsWith("-")) display = display.substring(1);
+	    else display = "-" + display;
+	    
 	    
 	}
 	
@@ -294,7 +317,9 @@ public final class CalculatorEngine{
 	                return;
 	            }
 	            result = calculator.divideByNumber(number);
+	           
 	            if(!historyDown.isBlank())historyUp = historyDown;
+	           
 	            historyDown = "1/(" + df.format(number) + ") = "+ df.format(result);
 	            break;
 
