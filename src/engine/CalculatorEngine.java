@@ -21,10 +21,14 @@ public final class CalculatorEngine{
 	
 //  PROBLEMS:
 //	(38x) meta to x bazw - sto 38 (-38x) kai meta pataw 1 ginete 38 kai oxi -38
-//	Error + function h + operstor + mporw na balw prosimo sto error
-//	NaN kai delete
-//  na min kanw polla delete thelei fix
+//  na xiristoume to apiro
 
+	
+//  IMPROVEMENTS:
+//  NaN thelw na to xriziome na blepw apo pou tha bgei oste na kanw to startNewNumber false klp. Na min checkarw kathe fora to diplay an einai NaN
+//  Thelw na ftiaksw to kodika ths applyFunction kai ths delete 
+//  Na baloume , anamse stis xiliades
+	
 	
 	public String getDisplay() {
 	    return display;
@@ -90,10 +94,9 @@ public final class CalculatorEngine{
 	private void appendNumber(String num) {
 
 	    if(startNewNumber) {
-	        
 	    	display = num;
 	        startNewNumber = false;
-	    } else if(!startNewNumber&&(display.equals("0")||display.equals("-0"))){ // startNewNumber=false
+	    } else if(!startNewNumber&&(display.equals("0")||display.equals("-0"))){
 	    	display = num;
 	    	startNewNumber = false;
 	    }else  display += num;
@@ -103,8 +106,8 @@ public final class CalculatorEngine{
 	
 
 	private void appendDot() {
-
-	    if(startNewNumber) {
+		
+		if(startNewNumber||display.equals("NaN")) {
 	        display = "0.";
 	        startNewNumber = false;
 	        return;
@@ -129,9 +132,9 @@ public final class CalculatorEngine{
 	
 	private void setOperator(String op) {
 
-	    if(operator != null && !startNewNumber) calculate();
-	    
-	    if(operator != null && startNewNumber) return;
+		if((operator != null && startNewNumber)||display.equals("Error")) return;
+		
+		if(operator != null && !startNewNumber) calculate();
 
 	    firstNumber = Double.parseDouble(display);
 	    operator = op;
@@ -143,10 +146,8 @@ public final class CalculatorEngine{
 	
 	private void calculate() {
 
-	    if(operator == null) {
-	        return;
-	    }
-
+	    if(operator == null || startNewNumber) return;
+	    
 	    secondNumber = Double.parseDouble(display);
 
 	    double result = 0;
@@ -168,18 +169,23 @@ public final class CalculatorEngine{
 	
 	
 	private void delete() {
-
+		
 	    if(startNewNumber && operator!=null) {
+	    	
+	    	if(display.equals("0") && display.length()==1)return;
+	    	
 	    	display = display.substring(0, display.length() - 1);
 	    	operator =null;
 	    	return;
 	    }
 	    
-	    if(display.length() == 1 || display.equals("-")) {
-	        display = "0";
+	    if( (display.length() == 1 || display.equals("-") )||display.equals("Error")||display.equals("NaN")) {
+	    	display = "0";
 	        startNewNumber = true;
 	        return;
 	    }
+	    
+	    
 
 	    display = display.substring(0, display.length() - 1);
 	}
@@ -187,7 +193,7 @@ public final class CalculatorEngine{
 	
 	private void toggleSign() {
 
-	    if(display.equals("0")) return;
+	    if(display.equals("0")||display.equals("Error")||display.equals("NaN")) return;
 
 	    if(display.startsWith("-")) {
 	        display = display.substring(1);
@@ -201,6 +207,8 @@ public final class CalculatorEngine{
 //thelw na brw alo pio clean tropo pou na kanei to idio pragma 
 	private void applyFunction(String func) {
 
+		if(display.equals("Error")||startNewNumber) return;
+		
 		if(operator!=null) {
 		    double number = Double.parseDouble(display);
 		    double result = 0;
