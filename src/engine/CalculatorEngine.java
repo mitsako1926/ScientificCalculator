@@ -1,14 +1,16 @@
 package engine;
 
 
-import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Locale;
+
 import calculations.BasicCalculations;
 
 public final class CalculatorEngine{
-	
-	
-	private DecimalFormat df = new DecimalFormat("###.#################");
-	
+		
+	private NumberFormat nf =  NumberFormat.getInstance(Locale.US);
+
 	private BasicCalculations calculator = new BasicCalculations();
 	
 	private double firstNumber,secondNumber;
@@ -20,10 +22,9 @@ public final class CalculatorEngine{
 
 	
 //  PROBLEMS:
-	
+//  na mporw na patisw 0.001
 //  IMPROVEMENTS:
 //  Thelw na ftiaksw to kodika ths applyFunction , calculate kai ths delete 
-//  Na baloume , anamesa stis xiliades
 	
 	
 	public String getDisplay() {
@@ -40,6 +41,17 @@ public final class CalculatorEngine{
 	    return historyUp;
 	}
 	
+	public double getDoubleValueFromDisplay() {
+		Number number;
+		try {
+			number = nf.parse(display);
+			return number.doubleValue();
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return -1;
+		}
+		
+	}
 	
 	public void press(String buttonPressed) {
 
@@ -95,9 +107,11 @@ public final class CalculatorEngine{
 	    } else if(!startNewNumber&&(display.equals("0")||display.equals("-0"))){
 	    	display = num;
 	    	startNewNumber = false;
-	    }else  display += num;
+	    }else  {
+	    	display += num;
+	    	display= nf.format(getDoubleValueFromDisplay());
+	    }
 	    
-
 	}
 	
 
@@ -132,11 +146,12 @@ public final class CalculatorEngine{
 		
 		if(operator != null && !startNewNumber) calculate();
 
-	    firstNumber = Double.parseDouble(display);
+		firstNumber = getDoubleValueFromDisplay();
+		
 	    operator = op;
-	    historyDown = df.format(firstNumber) + " " + op;
+	    historyDown = nf.format(firstNumber) + " " + op;
 	    
-	    if(display.endsWith("."))display = display.substring(0, display.length() - 1);
+	    if(display.endsWith(".")||display.endsWith(","))display = display.substring(0, display.length() - 1);
 	    
 	    display+=op;
 	    startNewNumber = true;
@@ -148,8 +163,8 @@ public final class CalculatorEngine{
 
 	    if(operator == null || startNewNumber) return;
 	    
-	    secondNumber = Double.parseDouble(display);
-
+		secondNumber = getDoubleValueFromDisplay();
+	    
 	    double result = 0;
 
 	    switch(operator) {
@@ -160,8 +175,8 @@ public final class CalculatorEngine{
 	        case "%": result = calculator.modular(firstNumber, secondNumber); break;
 	    }
 
-	    if(df.format(result).equals("∞")||df.format(result).equals("-∞")) {
-	    	historyUp = historyDown + " " + df.format(secondNumber) + " = Error";
+	    if(nf.format(result).equals("∞")||nf.format(result).equals("-∞")) {
+	    	historyUp = historyDown + " " + nf.format(secondNumber) + " = Error";
 	    	display = "Error";
 	    	historyDown = "";
 		    firstNumber = 0;
@@ -170,14 +185,14 @@ public final class CalculatorEngine{
 		    return;
 	    }
 	    
-	    historyUp = historyDown + " " + df.format(secondNumber) + " = "+df.format(result);
-	    display = df.format(result);
+	    historyUp = historyDown + " " + nf.format(secondNumber) + " = "+nf.format(result);
+	    display = nf.format(result);
 	    historyDown = "";
 	    firstNumber = result;
 	    operator = null;
 	}
 	
-	
+
 	private void delete() {
 		
 	    if(startNewNumber && operator!=null) {
@@ -185,9 +200,14 @@ public final class CalculatorEngine{
 	    	if(display.equals("0"))return;
 	    	
 	    	display = display.substring(0, display.length() - 1);
+	    	
+	    	double number;			
+			number = getDoubleValueFromDisplay();
+			
+	    	display = nf.format(number);
 	    	startNewNumber = false;
 	    	operator =null;
-	    	historyDown = historyDown.substring(0, historyDown.length()-1);
+	    	historyDown = "";
 	    	return;
 	    }
 	    
@@ -198,6 +218,10 @@ public final class CalculatorEngine{
 	    }
 
 	    display = display.substring(0, display.length() - 1);
+	    
+		double number;			
+		number = getDoubleValueFromDisplay();
+	    display = nf.format(number);
 	}
 	
 	
@@ -233,9 +257,11 @@ public final class CalculatorEngine{
 		if(display.equals("Error")||startNewNumber) return;
 		
 		if(operator!=null) {
-		    double number = Double.parseDouble(display);
+		   
+			double number;
 		    double result = 0;
-		    
+			number = getDoubleValueFromDisplay();
+		    		    
 		    switch(func) {
 
 		        case "√":
@@ -245,16 +271,16 @@ public final class CalculatorEngine{
 		                firstNumber = 0;
 		        	    secondNumber = 0;
 		        	    operator = null;
-		                historyDown = "√(" + df.format(number) + ") = Error";
+		                historyDown = "√(" + nf.format(number) + ") = Error";
 		                return;
 		            }
 		            result = calculator.squareRoot(number);
-		            display=df.format(result);
+		            display=nf.format(result);
 		            break;
 
 		        case "x²":
 		            result = calculator.square(number);
-		            display=df.format(result);
+		            display=nf.format(result);
 		            break;
 
 		        case "1/x":
@@ -264,11 +290,11 @@ public final class CalculatorEngine{
 		                firstNumber = 0;
 		        	    secondNumber = 0;
 		        	    operator = null;
-		        	    historyDown = "1/(" + df.format(number) + ") = Error";
+		        	    historyDown = "1/(" + nf.format(number) + ") = Error";
 		                return;
 		            }
 		            result = calculator.divideByNumber(number);
-		            display=df.format(result);
+		            display=nf.format(result);
 		            break;
 
 		        default:
@@ -280,8 +306,9 @@ public final class CalculatorEngine{
 		}
 		
 		
-	    double number = Double.parseDouble(display);
+		double number;
 	    double result = 0;
+		number = getDoubleValueFromDisplay();
 	    
 	    switch(func) {
 
@@ -292,18 +319,18 @@ public final class CalculatorEngine{
 	                firstNumber = 0;
 	        	    secondNumber = 0;
 	        	    operator = null;
-	                historyDown = "√(" + df.format(number) + ") = Error";
+	                historyDown = "√(" + nf.format(number) + ") = Error";
 	                return;
 	            }
 	            result = calculator.squareRoot(number);
 	            if(!historyDown.isBlank())historyUp = historyDown;
-	            historyDown = "√(" + df.format(number) + ") = " + df.format(result);
+	            historyDown = "√(" + nf.format(number) + ") = " + nf.format(result);
 	            break;
 
 	        case "x²":
 	            result = calculator.square(number);
 	            if(!historyDown.isBlank())historyUp = historyDown;
-	            historyDown = df.format(number) + "² = "+ df.format(result);
+	            historyDown = nf.format(number) + "² = "+ nf.format(result);
 	            break;
 
 	        case "1/x":
@@ -313,21 +340,21 @@ public final class CalculatorEngine{
 	                firstNumber = 0;
 	        	    secondNumber = 0;
 	        	    operator = null;
-	        	    historyDown = "1/(" + df.format(number) + ") = Error";
+	        	    historyDown = "1/(" + nf.format(number) + ") = Error";
 	                return;
 	            }
 	            result = calculator.divideByNumber(number);
 	           
 	            if(!historyDown.isBlank())historyUp = historyDown;
 	           
-	            historyDown = "1/(" + df.format(number) + ") = "+ df.format(result);
+	            historyDown = "1/(" + nf.format(number) + ") = "+ nf.format(result);
 	            break;
 
 	        default:
 	            return;
 	    }
 
-	    display = df.format(result);
+	    display = nf.format(result);
 	    firstNumber = result;
 	}
 

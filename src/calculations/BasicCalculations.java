@@ -1,6 +1,5 @@
 package calculations;
 
-import java.util.OptionalDouble;
 
 public final class BasicCalculations {
 
@@ -34,8 +33,8 @@ public final class BasicCalculations {
 	}
 	
 	public double divideByNumber(double number){
-		if(number!=0) return 1/number;
-		else throw new NumberFormatException();
+		return 1/number;
+		
 
 	}
 	
