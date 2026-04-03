@@ -26,9 +26,7 @@ public final class CalculatorPanel extends JPanel{
 	private JLabel historyLabelUp,historyLabelDown;
 	private JPanel panelDisplay;
 	private JPanel panelButtons;
-	
-	private DecimalFormat df = new DecimalFormat("###.#############");
-	
+		
 	private String[] buttons = {
 	    "%","≡","C","del",
 		"1/x","x²","√","÷",
@@ -104,7 +102,7 @@ public final class CalculatorPanel extends JPanel{
 		actions.put("%", () -> press("%"));
 		actions.put("=", () -> press("="));
 		actions.put("x²", () -> press("x²"));
-		actions.put("1/x", () -> press("1/x"));
+		actions.put("1/x", () -> press("1/"));
 		actions.put("√", () -> press("√"));
 		actions.put("±", () -> press("±"));
 		actions.put(".", () -> press("."));

@@ -3,9 +3,12 @@ package engine;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import calculations.BasicCalculations;
+import gui.CalculatorSettingsFrame;
 
 public final class CalculatorEngine{
 		
@@ -13,19 +16,27 @@ public final class CalculatorEngine{
 	{nf.setGroupingUsed(true); nf.setMaximumFractionDigits(10);}
 	
 	private final BasicCalculations calculator = new BasicCalculations();
+	private CalculatorSettingsFrame settingsFrame;
 	
-	private double firstNumber,secondNumber;
+	private double firstNumber,secondNumber,secondNumberArgument;
 	private boolean startNewNumber = true;
 	private String operator;
 	private String display = "0";
 	private String historyUp = "";
 	private String historyDown = "";
-
+	private String function;
+	
+	private final List<HistoryEntity> historyList = new ArrayList<>();
 	
 //  PROBLEMS:
 //  find more bugs
+//  to NaN na to kanw se error
+//  5x(-1) kai meta riza bgazei sosta error alla oxi sosto history
 //  IMPROVEMENTS:
 	
+	public List<HistoryEntity> getHistoryList(){
+		return new ArrayList<>(historyList);
+	}
 	
 	public String getDisplay() {
 	    return display;
@@ -39,7 +50,7 @@ public final class CalculatorEngine{
 	
 	public String getHistoryUp() {
 	    return historyUp;
-	}
+	}	
 	
 	
 	
@@ -63,6 +74,7 @@ public final class CalculatorEngine{
         firstNumber = 0;
 	    secondNumber = 0;
 	    operator = null;
+	    function =null;
 	}
 	
 	
@@ -114,7 +126,9 @@ public final class CalculatorEngine{
 	        case "=":
 	            calculate();
 	            break;
-
+	        case "≡":
+	        	settings();
+	        	break;
 	        case "C":
 	            clear();
 	            break;
@@ -129,12 +143,17 @@ public final class CalculatorEngine{
 
 	        case "√":
 	        case "x²":
-	        case "1/x":
+	        case "1/":
 	            applyFunction(buttonPressed);
 	            break;
 	    }
 	}
 	
+	
+	private void settings() {
+		System.out.println(historyList);
+		if (settingsFrame == null || !settingsFrame.isDisplayable()) settingsFrame = new CalculatorSettingsFrame();
+	}
 	
 	
 	private void appendNumber(String num) {
@@ -176,6 +195,7 @@ public final class CalculatorEngine{
 	    historyUp = "";
 	    historyDown = "";
 	    startNewNumber = true;
+	    function =null;
 	}
 	
 	
@@ -215,18 +235,25 @@ public final class CalculatorEngine{
 	        case "%": result = calculator.modular(firstNumber, secondNumber); break;
 	    }
 	    
-	    if(Double.isInfinite(result)) {
+	    if(function==null) {
+		    historyList.add(new HistoryEntity(firstNumber,secondNumber,result,operator,historyUp,function,Double.isInfinite(result)||Double.isNaN(result)));
+	    }else {
+		    historyList.add(new HistoryEntity(firstNumber,secondNumberArgument,result,operator,historyUp,function,Double.isInfinite(result)||Double.isNaN(result)));
+	    }
+	    
+	    if(Double.isInfinite(result)|| Double.isNaN(result)) {
 	    	historyUp = historyDown + " " + nf.format(secondNumber) + " = Error";
 	    	historyDown = "";
 	    	setErrorState();
 		    return;
 	    }
-	    
+ 	    
 	    historyUp = historyDown + " " + nf.format(secondNumber) + " = "+nf.format(result);
 	    display = nf.format(result);
 	    historyDown = "";
 	    firstNumber = result;
 	    operator = null;
+	    function=null;
 	}
 	
 
@@ -238,11 +265,8 @@ public final class CalculatorEngine{
 	    	if(display.equals("0"))return;
 	    	
 	    	display = display.substring(0, display.length() - 1);
+	    	display = reformatDisplay(display);
 	    	
-	    	double number;			
-			number = getDoubleValueFromDisplay();
-			
-	    	display = nf.format(number);
 	    	startNewNumber = false;
 	    	operator =null;
 	    	historyDown = "";
@@ -292,21 +316,26 @@ public final class CalculatorEngine{
 
 	
 	private void applyFunction(String func) {
-
-		if(display.equals("Error")||startNewNumber) return;
 		
+		if(display.equals("Error")||startNewNumber) return;
+		function = func;
+
 		double number = getDoubleValueFromDisplay();
+		secondNumberArgument = number;
 	    Double result = executeFunction(func,number);
 		
 		if(result == null) {
-			setErrorState();
             
 			switch(func) {
 			case "√":historyDown = "√(" + nf.format(number) + ") = Error";
 	        	break;
-	        case "1/x":historyDown = "1/(" + nf.format(number) + ") = Error";
+	        case "1/":historyDown = "1/(" + nf.format(number) + ") = Error";
 	        	break;
 			}
+			
+			historyList.add(new HistoryEntity(number,0,0,operator,historyUp,function,true));
+			setErrorState();
+
 			return;
 		}
 		
@@ -324,10 +353,10 @@ public final class CalculatorEngine{
 			break;
 		case "x²":historyDown = nf.format(number) + "² = "+ nf.format(result);
 			break;
-		case "1/x":historyDown = "1/(" + nf.format(number) + ") = "+ nf.format(result);
+		case "1/":historyDown = "1/(" + nf.format(number) + ") = "+ nf.format(result);
 			break;
 		}
-		
+		historyList.add(new HistoryEntity(number,0,result,operator,historyUp,function,false));
 	    firstNumber = result;       
 	}
 
@@ -340,7 +369,7 @@ public final class CalculatorEngine{
 				 
 		case "x²":return calculator.square(number);
 		
-		case "1/x":if(number==0)return null;
+		case "1/":if(number==0)return null;
 		 		   return calculator.divideByNumber(number);
 		default:return null;
 		}
