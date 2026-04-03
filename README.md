@@ -1,4 +1,4 @@
-# Scientific Calculator Application (Java)
+# Scientific Calculator Application 
 
 ## 📌 Overview
 
