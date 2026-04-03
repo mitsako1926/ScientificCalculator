@@ -9,9 +9,10 @@ import calculations.BasicCalculations;
 
 public final class CalculatorEngine{
 		
-	private NumberFormat nf =  NumberFormat.getInstance(Locale.US);
-
-	private BasicCalculations calculator = new BasicCalculations();
+	private final NumberFormat nf =  NumberFormat.getInstance(Locale.US);
+	{nf.setGroupingUsed(true); nf.setMaximumFractionDigits(10);}
+	
+	private final BasicCalculations calculator = new BasicCalculations();
 	
 	private double firstNumber,secondNumber;
 	private boolean startNewNumber = true;
@@ -22,9 +23,8 @@ public final class CalculatorEngine{
 
 	
 //  PROBLEMS:
-//  na mporw na patisw 0.001
+//  find more bugs
 //  IMPROVEMENTS:
-//  Thelw na ftiaksw to kodika ths applyFunction , calculate kai ths delete 
 	
 	
 	public String getDisplay() {
@@ -41,6 +41,8 @@ public final class CalculatorEngine{
 	    return historyUp;
 	}
 	
+	
+	
 	public double getDoubleValueFromDisplay() {
 		Number number;
 		try {
@@ -48,10 +50,45 @@ public final class CalculatorEngine{
 			return number.doubleValue();
 		} catch (ParseException e) {
 			e.printStackTrace();
-			return -1;
+			setErrorState();
+			return 0;
 		}
-		
 	}
+	
+	
+	
+	private void setErrorState() {
+		display = "Error";
+        startNewNumber = true;
+        firstNumber = 0;
+	    secondNumber = 0;
+	    operator = null;
+	}
+	
+	
+	
+	private String reformatDisplay(String text) {
+	    String clean = text.replace(",", "");
+
+	    if (clean.isEmpty() || clean.equals("-")) return "0";
+
+	    if (!clean.contains(".")) return nf.format(Double.parseDouble(clean));
+
+	    boolean negative = clean.startsWith("-");
+	    if (negative) clean = clean.substring(1);
+
+	    String[] parts = clean.split("\\.", 2);
+	    String integerPart = parts[0];
+	    String fractionalPart = parts[1];
+
+	    if (integerPart.isEmpty()) integerPart = "0";
+
+	    String formattedInteger = nf.format(Long.parseLong(integerPart));
+
+	    return (negative ? "-" : "") + formattedInteger + "." + fractionalPart;
+	}
+	
+	
 	
 	public void press(String buttonPressed) {
 
@@ -99,22 +136,23 @@ public final class CalculatorEngine{
 	}
 	
 	
+	
 	private void appendNumber(String num) {
 
 	    if(startNewNumber) {
 	    	display = num;
 	        startNewNumber = false;
-	    } else if(!startNewNumber&&(display.equals("0")||display.equals("-0"))){
+	    } else if(display.equals("0")||display.equals("-0")){
 	    	display = num;
 	    	startNewNumber = false;
 	    }else  {
 	    	display += num;
-	    	display= nf.format(getDoubleValueFromDisplay());
+	    	display = reformatDisplay(display);
 	    }
-	    
 	}
 	
 
+	
 	private void appendDot() {
 		
 		if(startNewNumber||display.equals("NaN")) {
@@ -129,6 +167,7 @@ public final class CalculatorEngine{
 	}
 	
 	
+	
 	private void clear() {
 	    display = "0";
 	    firstNumber = 0;
@@ -138,6 +177,7 @@ public final class CalculatorEngine{
 	    historyDown = "";
 	    startNewNumber = true;
 	}
+	
 	
 	
 	private void setOperator(String op) {
@@ -155,8 +195,8 @@ public final class CalculatorEngine{
 	    
 	    display+=op;
 	    startNewNumber = true;
-	    
 	}
+	
 	
 	
 	private void calculate() {
@@ -174,14 +214,11 @@ public final class CalculatorEngine{
 	        case "÷": result = calculator.devide(firstNumber, secondNumber); break;
 	        case "%": result = calculator.modular(firstNumber, secondNumber); break;
 	    }
-
-	    if(nf.format(result).equals("∞")||nf.format(result).equals("-∞")) {
+	    
+	    if(Double.isInfinite(result)) {
 	    	historyUp = historyDown + " " + nf.format(secondNumber) + " = Error";
-	    	display = "Error";
 	    	historyDown = "";
-		    firstNumber = 0;
-		    operator = null;
-		    startNewNumber = true;
+	    	setErrorState();
 		    return;
 	    }
 	    
@@ -193,6 +230,7 @@ public final class CalculatorEngine{
 	}
 	
 
+	
 	private void delete() {
 		
 	    if(startNewNumber && operator!=null) {
@@ -218,11 +256,13 @@ public final class CalculatorEngine{
 	    }
 
 	    display = display.substring(0, display.length() - 1);
+	    display = reformatDisplay(display);
 	    
-		double number;			
-		number = getDoubleValueFromDisplay();
-	    display = nf.format(number);
+	    if (display.equals("0")) {
+	        startNewNumber = true;
+	    }
 	}
+	
 	
 	
 	private void toggleSign() {
@@ -247,117 +287,67 @@ public final class CalculatorEngine{
 	    if(display.startsWith("-")) display = display.substring(1);
 	    else display = "-" + display;
 	    
-	    
 	}
 	
 
-//thelw na brw alo pio clean tropo pou na kanei to idio pragma 
+	
 	private void applyFunction(String func) {
 
 		if(display.equals("Error")||startNewNumber) return;
 		
-		if(operator!=null) {
-		   
-			double number;
-		    double result = 0;
-			number = getDoubleValueFromDisplay();
-		    		    
-		    switch(func) {
-
-		        case "√":
-		            if(number < 0) {
-		                display = "Error";
-		                startNewNumber = true;
-		                firstNumber = 0;
-		        	    secondNumber = 0;
-		        	    operator = null;
-		                historyDown = "√(" + nf.format(number) + ") = Error";
-		                return;
-		            }
-		            result = calculator.squareRoot(number);
-		            display=nf.format(result);
-		            break;
-
-		        case "x²":
-		            result = calculator.square(number);
-		            display=nf.format(result);
-		            break;
-
-		        case "1/x":
-		            if(number == 0) {
-		                display = "Error";
-		                startNewNumber = true;
-		                firstNumber = 0;
-		        	    secondNumber = 0;
-		        	    operator = null;
-		        	    historyDown = "1/(" + nf.format(number) + ") = Error";
-		                return;
-		            }
-		            result = calculator.divideByNumber(number);
-		            display=nf.format(result);
-		            break;
-
-		        default:
-		            return;
-		    
-		    }
-		    calculate();
-		    return;
+		double number = getDoubleValueFromDisplay();
+	    Double result = executeFunction(func,number);
+		
+		if(result == null) {
+			setErrorState();
+            
+			switch(func) {
+			case "√":historyDown = "√(" + nf.format(number) + ") = Error";
+	        	break;
+	        case "1/x":historyDown = "1/(" + nf.format(number) + ") = Error";
+	        	break;
+			}
+			return;
 		}
 		
+		display=nf.format(result);
 		
-		double number;
-	    double result = 0;
-		number = getDoubleValueFromDisplay();
+		if(operator!=null) {
+			calculate();
+	    	return;
+		}
 	    
-	    switch(func) {
-
-	        case "√":
-	            if(number < 0) {
-	                display = "Error";
-	                startNewNumber = true;
-	                firstNumber = 0;
-	        	    secondNumber = 0;
-	        	    operator = null;
-	                historyDown = "√(" + nf.format(number) + ") = Error";
-	                return;
-	            }
-	            result = calculator.squareRoot(number);
-	            if(!historyDown.isBlank())historyUp = historyDown;
-	            historyDown = "√(" + nf.format(number) + ") = " + nf.format(result);
-	            break;
-
-	        case "x²":
-	            result = calculator.square(number);
-	            if(!historyDown.isBlank())historyUp = historyDown;
-	            historyDown = nf.format(number) + "² = "+ nf.format(result);
-	            break;
-
-	        case "1/x":
-	            if(number == 0) {
-	                display = "Error";
-	                startNewNumber = true;
-	                firstNumber = 0;
-	        	    secondNumber = 0;
-	        	    operator = null;
-	        	    historyDown = "1/(" + nf.format(number) + ") = Error";
-	                return;
-	            }
-	            result = calculator.divideByNumber(number);
-	           
-	            if(!historyDown.isBlank())historyUp = historyDown;
-	           
-	            historyDown = "1/(" + nf.format(number) + ") = "+ nf.format(result);
-	            break;
-
-	        default:
-	            return;
-	    }
-
-	    display = nf.format(result);
-	    firstNumber = result;
+		if(!historyDown.isBlank())historyUp = historyDown;
+		
+		switch(func) {
+		case "√":historyDown = "√(" + nf.format(number) + ") = " + nf.format(result);
+			break;
+		case "x²":historyDown = nf.format(number) + "² = "+ nf.format(result);
+			break;
+		case "1/x":historyDown = "1/(" + nf.format(number) + ") = "+ nf.format(result);
+			break;
+		}
+		
+	    firstNumber = result;       
 	}
 
+	
+	
+	private Double executeFunction(String function,double number) {
+		switch(function) {
+		case "√":if(number<0)return null;
+				 return calculator.squareRoot(number);
+				 
+		case "x²":return calculator.square(number);
+		
+		case "1/x":if(number==0)return null;
+		 		   return calculator.divideByNumber(number);
+		default:return null;
+		}
+	}
+	
+	
+	
 	
 }
 
