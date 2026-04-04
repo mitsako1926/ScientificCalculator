@@ -32,7 +32,6 @@ public final class CalculatorEngine{
 	
 //  PROBLEMS:
 //  find more bugs
-//  history up is kinda bad
 //  IMPROVEMENTS:
 	
 	public List<HistoryEntity> getHistoryList(){
@@ -74,13 +73,15 @@ public final class CalculatorEngine{
         firstNumber = 0;
 	    secondNumber = 0;
 	    operator = null;
-	    function =null;
 	}
 	
 	
 	
 	private String reformatDisplay(String text) {
-	    String clean = text.replace(",", "");
+	    
+		if (text == null || text.contains("Error") || text.contains("∞")) return "0";
+		
+		String clean = text.replace(",", "");
 
 	    if (clean.isEmpty() || clean.equals("-")) return "0";
 
@@ -146,12 +147,6 @@ public final class CalculatorEngine{
 	
 	
 	
-	public void setDisplayRefreshListener(){
-		
-	}
-	
-	
-	
 	public void press(String buttonPressed) {
 
 	    if(buttonPressed.matches("[0-9]")) {
@@ -207,6 +202,16 @@ public final class CalculatorEngine{
 	
 	private void appendNumber(String num) {
 
+		if(display.contains("Error")||display.contains("∞")) {
+			display = num;
+		    startNewNumber = false;
+		    operator = null;
+			return;
+		}
+		
+		String raw = display.replace(",", "").replace("-", "").replace(".", "");
+		if (raw.length() >= 15) return;
+		
 	    if(startNewNumber) {
 	    	display = num;
 	        startNewNumber = false;
@@ -251,13 +256,18 @@ public final class CalculatorEngine{
 	
 	private void setOperator(String op) {
 
-		if((operator != null && startNewNumber)||display.equals("Error")) return;
+		if((operator != null && startNewNumber)||display.contains("Error")) return;
 		
 		if(operator != null && !startNewNumber) calculate();
 
 		firstNumber = getDoubleValueFromDisplay();
 		
 	    operator = op;
+	    
+	    if(function!=null) {
+	    	historyUp = historyDown;
+	    	function = null;
+	    }
 	    historyDown = nf.format(firstNumber) + " " + op;
 	    
 	    if(display.endsWith(".")||display.endsWith(","))display = display.substring(0, display.length() - 1);
@@ -310,11 +320,24 @@ public final class CalculatorEngine{
 	
 	private void delete() {
 		
+		System.out.println("DELETE START -> display=" + display 
+			    + ", operator=" + operator 
+			    + ", startNewNumber=" + startNewNumber 
+			    + ", function=" + function);
+		
+		if (display.contains("Error")) {
+		    display = "0";
+		    startNewNumber = true;
+		    operator = null;
+		    return;
+		}
+		
 	    if(startNewNumber && operator!=null) {
 	    	
 	    	if(display.equals("0"))return;
 	    	
 	    	display = display.substring(0, display.length() - 1);
+	    	System.out.println("Before reformat -> display=" + display);
 	    	display = reformatDisplay(display);
 	    	
 	    	startNewNumber = false;
@@ -330,6 +353,7 @@ public final class CalculatorEngine{
 	    }
 
 	    display = display.substring(0, display.length() - 1);
+	    System.out.println("Before reformat -> display=" + display);
 	    display = reformatDisplay(display);
 	    
 	    if (display.equals("0")) {
@@ -411,15 +435,15 @@ public final class CalculatorEngine{
 	    	return;
 		}
 	    
-		if(!historyDown.isBlank())historyUp = historyDown;
-		
+		if(!historyDown.isBlank()) historyUp = historyDown;
+			
 		switch(func) {
-		case "√":historyDown = "√(" + nf.format(number) + ") = " + nf.format(result);
-			break;
-		case "x²":historyDown = nf.format(number) + "² = "+ nf.format(result);
-			break;
-		case "1/":historyDown = "1/(" + nf.format(number) + ") = "+ nf.format(result);
-			break;
+			case "√":historyDown = "√(" + nf.format(number) + ") = " + nf.format(result);
+				break;
+			case "x²":historyDown = nf.format(number) + "² = "+ nf.format(result);
+				break;
+			case "1/":historyDown = "1/(" + nf.format(number) + ") = "+ nf.format(result);
+				break;
 		}
 		
 		historyList.add(new HistoryEntity(number,0,result,operator,historyUp,function,false));
