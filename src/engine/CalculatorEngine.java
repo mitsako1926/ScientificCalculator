@@ -30,8 +30,6 @@ public final class CalculatorEngine{
 	
 //  PROBLEMS:
 //  find more bugs
-//  to NaN na to kanw se error
-//  5x(-1) kai meta riza bgazei sosta error alla oxi sosto history
 //  IMPROVEMENTS:
 	
 	public List<HistoryEntity> getHistoryList(){
@@ -102,6 +100,14 @@ public final class CalculatorEngine{
 	
 	
 	
+	private void refreshSettingsPanelHistory() {
+		if (settingsFrame != null && settingsFrame.isDisplayable()) {
+			settingsFrame.refreshHistory();
+		}
+	}
+	
+	
+	
 	public void press(String buttonPressed) {
 
 	    if(buttonPressed.matches("[0-9]")) {
@@ -151,8 +157,7 @@ public final class CalculatorEngine{
 	
 	
 	private void settings() {
-		System.out.println(historyList);
-		if (settingsFrame == null || !settingsFrame.isDisplayable()) settingsFrame = new CalculatorSettingsFrame();
+		if (settingsFrame == null || !settingsFrame.isDisplayable()) settingsFrame = new CalculatorSettingsFrame(this);
 	}
 	
 	
@@ -174,7 +179,7 @@ public final class CalculatorEngine{
 	
 	private void appendDot() {
 		
-		if(startNewNumber||display.equals("NaN")) {
+		if(startNewNumber) {
 	        display = "0.";
 	        startNewNumber = false;
 	        return;
@@ -240,6 +245,7 @@ public final class CalculatorEngine{
 	    }else {
 		    historyList.add(new HistoryEntity(firstNumber,secondNumberArgument,result,operator,historyUp,function,Double.isInfinite(result)||Double.isNaN(result)));
 	    }
+	    refreshSettingsPanelHistory();
 	    
 	    if(Double.isInfinite(result)|| Double.isNaN(result)) {
 	    	historyUp = historyDown + " " + nf.format(secondNumber) + " = Error";
@@ -253,7 +259,7 @@ public final class CalculatorEngine{
 	    historyDown = "";
 	    firstNumber = result;
 	    operator = null;
-	    function=null;
+	    function = null;
 	}
 	
 
@@ -273,7 +279,7 @@ public final class CalculatorEngine{
 	    	return;
 	    }
 	    
-	    if( (display.length() == 1 || display.equals("-") )||display.equals("Error")||display.equals("NaN")) {
+	    if((display.length() == 1 || display.equals("-") )||display.equals("Error")) {
 	    	display = "0";
 	        startNewNumber = true;
 	        return;
@@ -291,7 +297,7 @@ public final class CalculatorEngine{
 	
 	private void toggleSign() {
 
-	    if(display.equals("0")||display.equals("Error")||display.equals("NaN")) return;
+	    if(display.equals("0")||display.equals("Error")) return;
 
 	    if(operator!=null&&startNewNumber) {
 	    	
@@ -326,14 +332,29 @@ public final class CalculatorEngine{
 		
 		if(result == null) {
             
-			switch(func) {
-			case "√":historyDown = "√(" + nf.format(number) + ") = Error";
-	        	break;
-	        case "1/":historyDown = "1/(" + nf.format(number) + ") = Error";
-	        	break;
-			}
+			String functionText = "";
+
+	        switch (func) {
+	            case "√":
+	                functionText = "√(" + nf.format(number) + ")";
+	                break;
+	            case "1/":
+	                functionText = "1/(" + nf.format(number) + ")";
+	                break;
+	            case "x²":
+	                functionText = nf.format(number) + "²";
+	                break;
+	        }
+	        
+	        if (operator != null) {
+	            historyDown = nf.format(firstNumber) + " " + operator + " " + functionText + " = Error";
+				historyList.add(new HistoryEntity(firstNumber,number,0,operator,historyUp,function,true));
+	        } else {
+	            historyDown = functionText + " = Error";
+				historyList.add(new HistoryEntity(number,0,0,operator,historyUp,function,true));
+	        }
 			
-			historyList.add(new HistoryEntity(number,0,0,operator,historyUp,function,true));
+			refreshSettingsPanelHistory();
 			setErrorState();
 
 			return;
@@ -356,8 +377,11 @@ public final class CalculatorEngine{
 		case "1/":historyDown = "1/(" + nf.format(number) + ") = "+ nf.format(result);
 			break;
 		}
+		
 		historyList.add(new HistoryEntity(number,0,result,operator,historyUp,function,false));
-	    firstNumber = result;       
+		refreshSettingsPanelHistory();
+	    firstNumber = result; 
+	    
 	}
 
 	

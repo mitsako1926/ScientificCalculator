@@ -82,8 +82,7 @@ public final class HistoryEntity {
 	}
 
 	public String toString() {
-		return getHistoryDown() + " " + nf.format(result);
-		//return getHistoryUp();
+		return getHistoryDown() + " " + (error ? "Error" : nf.format(result));
 	}
 	
 }

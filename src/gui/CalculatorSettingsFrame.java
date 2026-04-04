@@ -5,9 +5,15 @@ import java.awt.Frame;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
+import engine.CalculatorEngine;
+
 public final class CalculatorSettingsFrame extends JFrame{
 	
-	public CalculatorSettingsFrame() {
+	private final CalculatorSettingsPanel settingsPanel;
+	
+	public CalculatorSettingsFrame(CalculatorEngine engine) {
+		
+		settingsPanel = new CalculatorSettingsPanel(engine);
 		
 		ImageIcon imageIcon = new ImageIcon("calculatorImage.jpg");
 		
@@ -17,7 +23,7 @@ public final class CalculatorSettingsFrame extends JFrame{
 		setAlwaysOnTop(true);
 		setIconImage(imageIcon.getImage());
 		
-		add(new CalculatorSettingsPanel());
+		add(settingsPanel);
 		
 		pack();
 		
@@ -35,4 +41,13 @@ public final class CalculatorSettingsFrame extends JFrame{
 		setLocation(x, y);
 		setVisible(true);
 	}
+	
+	
+	
+	public void refreshHistory() {
+        settingsPanel.refreshHistory();
+    }
+	
+
+
 }
