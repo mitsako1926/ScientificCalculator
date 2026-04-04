@@ -66,6 +66,8 @@ public final class CalculatorPanel extends JPanel{
 		textDisplay.setBackground(Color.GRAY);
 		textDisplay.setForeground(Color.WHITE);
 		textDisplay.setBorder(null);
+		textDisplay.setEditable(false);//key binds are going to be supported in the future
+		textDisplay.setFocusable(false);
 		
 		
 		historyLabelUp = new JLabel();
@@ -88,6 +90,7 @@ public final class CalculatorPanel extends JPanel{
 		panelDisplay.add(historyLabelDown,BorderLayout.CENTER);
 		panelDisplay.add(textDisplay,BorderLayout.SOUTH);
 		
+		engine.setDisplayRefreshListener(this::refreshView);
 		
 		//COMPONENTS OF THE DISPLAY OF BUTTONS
 		
@@ -123,7 +126,6 @@ public final class CalculatorPanel extends JPanel{
 		//ADDING THE 2 MAIN DISPLAY PANELS TO THE MAIN PANEL OF THE FRAME 
 		add(panelDisplay,BorderLayout.NORTH);
 		add(panelButtons,BorderLayout.SOUTH);
-		
 	}
 	
 	private void customizeButton(JButton button,Map<String,Runnable> actions) {
@@ -143,6 +145,14 @@ public final class CalculatorPanel extends JPanel{
 	    historyLabelDown.setText(engine.getHistoryDown());
 	    historyLabelUp.setText(engine.getHistoryUp());
 	}
+	
+	
+	private void refreshView() {
+	    textDisplay.setText(engine.getDisplay());
+	    historyLabelDown.setText(engine.getHistoryDown());
+	    historyLabelUp.setText(engine.getHistoryUp());
+	}
+	
 
 }
 

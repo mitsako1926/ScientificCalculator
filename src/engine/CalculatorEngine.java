@@ -18,6 +18,8 @@ public final class CalculatorEngine{
 	private final BasicCalculations calculator = new BasicCalculations();
 	private CalculatorSettingsFrame settingsFrame;
 	
+	private Runnable displayRefreshListener;
+	
 	private double firstNumber,secondNumber,secondNumberArgument;
 	private boolean startNewNumber = true;
 	private String operator;
@@ -30,6 +32,7 @@ public final class CalculatorEngine{
 	
 //  PROBLEMS:
 //  find more bugs
+//  history up is kinda bad
 //  IMPROVEMENTS:
 	
 	public List<HistoryEntity> getHistoryList(){
@@ -58,7 +61,6 @@ public final class CalculatorEngine{
 			number = nf.parse(display);
 			return number.doubleValue();
 		} catch (ParseException e) {
-			e.printStackTrace();
 			setErrorState();
 			return 0;
 		}
@@ -104,6 +106,48 @@ public final class CalculatorEngine{
 		if (settingsFrame != null && settingsFrame.isDisplayable()) {
 			settingsFrame.refreshHistory();
 		}
+	}
+	
+	public void setDisplayRefreshListener(Runnable displayRefreshListener) {
+	    this.displayRefreshListener = displayRefreshListener;
+	}
+	
+	private void refreshMainDisplay() {
+	    if (displayRefreshListener != null) {
+	        displayRefreshListener.run();
+	    }
+	}
+	
+	public void loadFromHistory(HistoryEntity entry) {
+		
+		if(entry==null)return;
+		
+		if(!entry.isError()) {
+			firstNumber = entry.getResult();
+			display = nf.format(entry.getResult());
+		}else {
+			setErrorState();
+			historyDown = entry.getHistoryDown();
+			historyUp = entry.getHistoryUp();
+			refreshMainDisplay();
+			return;
+		}
+		
+		historyDown = entry.getHistoryDown();
+		historyUp = entry.getHistoryUp();
+		
+		operator = null;
+		function = null;
+		startNewNumber = false;
+		secondNumber = 0;
+		
+		refreshMainDisplay();
+	}
+	
+	
+	
+	public void setDisplayRefreshListener(){
+		
 	}
 	
 	

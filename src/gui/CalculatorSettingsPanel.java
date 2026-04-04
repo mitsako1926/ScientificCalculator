@@ -1,46 +1,40 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Dimension;
-
-import javax.swing.DefaultListModel;
-import javax.swing.JList;
+import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 
 import engine.CalculatorEngine;
-import engine.HistoryEntity;
 
 public class CalculatorSettingsPanel extends JPanel {
 	
-	private final CalculatorEngine engine;
-    private final DefaultListModel<HistoryEntity> model;
-    private final JList<HistoryEntity> list;
-	
-	CalculatorSettingsPanel(CalculatorEngine engine){
-		
-		this.engine = engine;
-		
-		setPreferredSize(new Dimension(350,450));
-		setLayout(new BorderLayout());
-		
-		model = new DefaultListModel<>();
-		list = new JList<>(model);
-		
-		add(new JScrollPane(list), BorderLayout.CENTER);
-		
-		refreshHistory();
-	}
-	
-	
-	public void refreshHistory() {
-        model.clear();
+	private CardLayout cardLayout;
+    private JPanel container;
 
-        for (HistoryEntity e : engine.getHistoryList()) {
-            model.addElement(e);
-        }
+    CalculatorSettingsPanel(CalculatorEngine engine) {
+    	
+    	setLayout(new BorderLayout());
+    	setPreferredSize(new Dimension(350, 450));
+
+        JButton showHistoryButton = new JButton("Show History");
+        showHistoryButton.setFocusable(false);
+        showHistoryButton.addActionListener(e -> {
+            cardLayout.show(container, "history");
+        });
+        
+        add(showHistoryButton,BorderLayout.CENTER);
+    
+    }
+
+    public void setCardLayout(CardLayout cardLayout, JPanel container) {
+        this.cardLayout = cardLayout;
+        this.container = container;
     }
 	
 	
 	
+	
 }
+
