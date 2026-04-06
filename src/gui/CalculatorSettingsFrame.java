@@ -20,7 +20,7 @@ import engine.HistoryEntity;
 public final class CalculatorSettingsFrame extends JFrame{
 	
 	private final CalculatorSettingsPanel settingsPanel;
-	private final CalculatorHistoryPanel historyPanel;
+	private final CalculatorShowHistoryPanel historyPanel;
 	
 	public CalculatorSettingsFrame(CalculatorEngine engine) {
 		
@@ -31,7 +31,7 @@ public final class CalculatorSettingsFrame extends JFrame{
 		CardLayout cardLayout = new CardLayout();
 		JPanel container = new JPanel(cardLayout);
 		
-		historyPanel = new CalculatorHistoryPanel(engine);
+		historyPanel = new CalculatorShowHistoryPanel(engine);
 		
 		settingsPanel.setCardLayout(cardLayout, container);
 		historyPanel.setCardLayout(cardLayout, container);
