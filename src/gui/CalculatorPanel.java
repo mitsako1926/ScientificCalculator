@@ -22,12 +22,12 @@ import engine.CalculatorEngine;
 
 public final class CalculatorPanel extends JPanel{
 	
-	private JTextField textDisplay;
-	private JLabel historyLabelUp,historyLabelDown;
-	private JPanel panelDisplay;
-	private JPanel panelButtons;
+	private final JTextField textDisplay;
+	private final JLabel historyLabelUp,historyLabelDown;
+	private final JPanel panelDisplay;
+	private final JPanel panelButtons;
 		
-	private String[] buttons = {
+	private final String[] buttons = {
 	    "%","≡","C","del",
 		"1/x","x²","√","÷",
 	    "7","8","9","×",
@@ -36,7 +36,7 @@ public final class CalculatorPanel extends JPanel{
 	    "±","0",".","=",
 	};
 		
-	private CalculatorEngine engine = new CalculatorEngine();
+	private final CalculatorEngine engine = new CalculatorEngine();
 
 	
 	CalculatorPanel(){
@@ -54,7 +54,8 @@ public final class CalculatorPanel extends JPanel{
 		//MAIN DISPLAY OF BUTTONS
 		panelButtons = new JPanel();
 		panelButtons.setPreferredSize(new Dimension(400,450));
-		panelButtons.setLayout(new GridLayout(6,4,3,3));
+		panelButtons.setLayout(new GridLayout(6,4,4,4));
+//		panelButtons.setBackground(Color.DARK_GRAY);
 		panelButtons.setBackground(Color.BLACK);
 		
 		//COMPONENTS OF THE DISPLAY OF CALCULATIONS

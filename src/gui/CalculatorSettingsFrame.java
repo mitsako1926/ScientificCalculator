@@ -1,21 +1,12 @@
 package gui;
 
-import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.Dimension;
 import java.awt.Frame;
-import java.util.List;
-
-import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 
 import engine.CalculatorEngine;
-import engine.HistoryEntity;
 
 public final class CalculatorSettingsFrame extends JFrame{
 	
