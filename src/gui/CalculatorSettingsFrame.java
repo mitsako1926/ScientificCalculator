@@ -15,9 +15,9 @@ public final class CalculatorSettingsFrame extends JFrame{
 	private final CalculatorShowHistoryPanel showHistoryPanel;
 	private final CalculatorEngine engine;
 	
-	public CalculatorSettingsFrame(CalculatorEngine engine) {
+	public CalculatorSettingsFrame(CalculatorEngine engine1) {
 		
-		this.engine = engine;
+		this.engine = engine1;
 		
 		ImageIcon imageIcon = new ImageIcon("calculatorImage.jpg");
 		
@@ -26,14 +26,14 @@ public final class CalculatorSettingsFrame extends JFrame{
 		
 		
 		//right panels
-//		JPanel generalPanel = new CalculatorGeneralPanel(engine);
+		JPanel generalPanel = new CalculatorGeneralPanel(engine);
 		historyPanel = new CalculatorHistoryPanel(engine);
 		historyPanel.setCardLayout(cardLayout, content);
 		showHistoryPanel = new CalculatorShowHistoryPanel(engine);
 		showHistoryPanel.setCardLayout(cardLayout, content);
 //		JPanel scientificPanel = new CalculatorScientificPanel(engine);
 
-//		content.add(generalPanel, "general");
+		content.add(generalPanel, "general");
 		content.add(historyPanel, "history");
 		content.add(showHistoryPanel,"show history");
 //		content.add(scientificPanel, "scientific");

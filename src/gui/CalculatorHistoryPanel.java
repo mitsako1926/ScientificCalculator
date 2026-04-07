@@ -50,10 +50,8 @@ public class CalculatorHistoryPanel extends JPanel{
 		labelHistory.setPreferredSize(new Dimension(250,70));
 
 		customizeLabel(labelManageHistory);
-		labelManageHistory.setFont(new Font("Arial",Font.BOLD,15));
 
 		customizeLabel(labelImportExport);
-		labelImportExport.setFont(new Font("Arial",Font.BOLD,15));
 
 		customizePanel(panelManageHistory);
 		customizePanel(panelImportExport);
@@ -114,6 +112,7 @@ public class CalculatorHistoryPanel extends JPanel{
 		label.setBackground(Color.GRAY);
 		label.setForeground(Color.WHITE);
 		label.setPreferredSize(new Dimension(250,90));
+		label.setFont(new Font("Arial",Font.BOLD,17));
 		label.setOpaque(true);
 		label.setHorizontalAlignment(JLabel.CENTER);
 	}
@@ -131,7 +130,7 @@ public class CalculatorHistoryPanel extends JPanel{
 		button.setFocusable(false);
 	    button.setBackground(Color.GRAY);
 	    button.setForeground(Color.WHITE);
-	    button.setFont(new Font("Arial", Font.PLAIN, 13));
+	    button.setFont(new Font("Arial", Font.PLAIN, 15));
 	    button.addActionListener(e -> actions.get(button.getText()).run());
 		button.setPreferredSize(new Dimension(150,75));
 	    button.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 2, true));
