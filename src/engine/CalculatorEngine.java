@@ -147,6 +147,7 @@ public final class CalculatorEngine{
 		refreshMainDisplay();
 	}
 	
+
 	
 	public void clearHistory(){
 		if(historyList!=null) {
@@ -154,6 +155,7 @@ public final class CalculatorEngine{
 			refreshSettingsPanelHistory();
 		}
 	}
+	
 	
 	
 	public void press(String buttonPressed) {
@@ -329,11 +331,6 @@ public final class CalculatorEngine{
 	
 	private void delete() {
 		
-		System.out.println("DELETE START -> display=" + display 
-			    + ", operator=" + operator 
-			    + ", startNewNumber=" + startNewNumber 
-			    + ", function=" + function);
-		
 		if (display.contains("Error")) {
 		    display = "0";
 		    startNewNumber = true;
@@ -346,7 +343,6 @@ public final class CalculatorEngine{
 	    	if(display.equals("0"))return;
 	    	
 	    	display = display.substring(0, display.length() - 1);
-	    	System.out.println("Before reformat -> display=" + display);
 	    	display = reformatDisplay(display);
 	    	
 	    	startNewNumber = false;
@@ -362,7 +358,6 @@ public final class CalculatorEngine{
 	    }
 
 	    display = display.substring(0, display.length() - 1);
-	    System.out.println("Before reformat -> display=" + display);
 	    display = reformatDisplay(display);
 	    
 	    if (display.equals("0")) {

@@ -31,12 +31,12 @@ public final class CalculatorSettingsFrame extends JFrame{
 		historyPanel.setCardLayout(cardLayout, content);
 		showHistoryPanel = new CalculatorShowHistoryPanel(engine);
 		showHistoryPanel.setCardLayout(cardLayout, content);
-//		JPanel scientificPanel = new CalculatorScientificPanel(engine);
+		JPanel scientificPanel = new CalculatorScientificPanel(engine);
 
 		content.add(generalPanel, "general");
 		content.add(historyPanel, "history");
 		content.add(showHistoryPanel,"show history");
-//		content.add(scientificPanel, "scientific");
+		content.add(scientificPanel, "scientific");
 
 		//sidebar
 		CalculatorSettingsPanel sidebar = new CalculatorSettingsPanel(cardLayout, content);
