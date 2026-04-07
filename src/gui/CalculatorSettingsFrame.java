@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Frame;
 import javax.swing.ImageIcon;
@@ -10,22 +11,39 @@ import engine.CalculatorEngine;
 
 public final class CalculatorSettingsFrame extends JFrame{
 	
-	private final CalculatorSettingsPanel settingsPanel;
-	private final CalculatorShowHistoryPanel historyPanel;
+	private final CalculatorHistoryPanel historyPanel;
+	private final CalculatorShowHistoryPanel showHistoryPanel;
+	private final CalculatorEngine engine;
 	
 	public CalculatorSettingsFrame(CalculatorEngine engine) {
 		
-		settingsPanel = new CalculatorSettingsPanel(engine);
+		this.engine = engine;
 		
 		ImageIcon imageIcon = new ImageIcon("calculatorImage.jpg");
 		
 		CardLayout cardLayout = new CardLayout();
-		JPanel container = new JPanel(cardLayout);
+		JPanel content = new JPanel(cardLayout);
 		
-		historyPanel = new CalculatorShowHistoryPanel(engine);
 		
-		settingsPanel.setCardLayout(cardLayout, container);
-		historyPanel.setCardLayout(cardLayout, container);
+		//right panels
+//		JPanel generalPanel = new CalculatorGeneralPanel(engine);
+		historyPanel = new CalculatorHistoryPanel(engine);
+		historyPanel.setCardLayout(cardLayout, content);
+		showHistoryPanel = new CalculatorShowHistoryPanel(engine);
+		showHistoryPanel.setCardLayout(cardLayout, content);
+//		JPanel scientificPanel = new CalculatorScientificPanel(engine);
+
+//		content.add(generalPanel, "general");
+		content.add(historyPanel, "history");
+		content.add(showHistoryPanel,"show history");
+//		content.add(scientificPanel, "scientific");
+
+		//sidebar
+		CalculatorSettingsPanel sidebar = new CalculatorSettingsPanel(cardLayout, content);
+
+		setLayout(new BorderLayout());
+		add(sidebar, BorderLayout.WEST);
+		add(content, BorderLayout.CENTER);
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setResizable(false);
@@ -33,10 +51,6 @@ public final class CalculatorSettingsFrame extends JFrame{
 		setAlwaysOnTop(true);
 		setIconImage(imageIcon.getImage());
 		
-		container.add(settingsPanel, "settings");
-		container.add(historyPanel, "history");
-
-		add(container);
 		
 		pack();
 		
@@ -58,12 +72,9 @@ public final class CalculatorSettingsFrame extends JFrame{
 		setVisible(true);
 	}
 	
-	
-	
 	public void refreshHistory() {
-        historyPanel.refreshHistory();
+		showHistoryPanel.refreshHistory();
     }
-	
 
 
 }

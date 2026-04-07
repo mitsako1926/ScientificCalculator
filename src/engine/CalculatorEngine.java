@@ -109,6 +109,7 @@ public final class CalculatorEngine{
 		}
 	}
 	
+	
 	public void setDisplayRefreshListener(Runnable displayRefreshListener) {
 	    this.displayRefreshListener = displayRefreshListener;
 	}
@@ -118,6 +119,7 @@ public final class CalculatorEngine{
 	        displayRefreshListener.run();
 	    }
 	}
+	
 	
 	public void loadFromHistory(HistoryEntity entry) {
 		
@@ -145,6 +147,13 @@ public final class CalculatorEngine{
 		refreshMainDisplay();
 	}
 	
+	
+	public void clearHistory(){
+		if(historyList!=null) {
+			historyList.clear();
+			refreshSettingsPanelHistory();
+		}
+	}
 	
 	
 	public void press(String buttonPressed) {

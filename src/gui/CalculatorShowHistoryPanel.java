@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
-
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
@@ -50,8 +49,9 @@ public final class CalculatorShowHistoryPanel extends JPanel{
 		});
 		
 		JButton backButton = new JButton("Back");
+		backButton.setFocusable(false);
 	    backButton.addActionListener(e -> {
-	    	cardLayout.show(container, "settings");
+	    	cardLayout.show(container, "history");
 	    });
 		
 		add(new JScrollPane(list), BorderLayout.CENTER);
@@ -75,6 +75,10 @@ public final class CalculatorShowHistoryPanel extends JPanel{
 	    this.container = container;
 	}
 	
+
+	
 	
 }
+
+
 

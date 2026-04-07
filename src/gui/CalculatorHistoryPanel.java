@@ -1,18 +1,24 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.GridLayout;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import engine.CalculatorEngine;
 
 public class CalculatorHistoryPanel extends JPanel{
 	
@@ -25,10 +31,17 @@ public class CalculatorHistoryPanel extends JPanel{
 	private final JPanel panelManageHistoryButtons = new JPanel();
 	private final JPanel panelImportExportButtons = new JPanel();
 	
+	private CardLayout cardLayout;
+	private JPanel container;
+	
+	private final CalculatorEngine engine;
 	
 	private final String [] arrayButtons = {"Show History","Clear History","Load History","Save History"};
 	
-	CalculatorHistoryPanel(){
+	CalculatorHistoryPanel(CalculatorEngine engine){
+
+		this.engine = engine;
+		
 		setPreferredSize(new Dimension(250,450));
 		setLayout(new BorderLayout());
 		
@@ -42,19 +55,11 @@ public class CalculatorHistoryPanel extends JPanel{
 		customizeLabel(labelImportExport);
 		labelImportExport.setFont(new Font("Arial",Font.BOLD,15));
 
-		
-		panelManageHistory.setLayout(new BorderLayout());
-		panelManageHistory.setPreferredSize(new Dimension(250,175));
-		panelManageHistory.setBackground(Color.GRAY);
-		panelManageHistory.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-
+		customizePanel(panelManageHistory);
+		customizePanel(panelImportExport);
+				
 		panelManageHistoryButtons.setLayout(new GridLayout(1, 2, 20, 0));
 		panelManageHistoryButtons.setBackground(Color.GRAY);
-		
-		panelImportExport.setLayout(new BorderLayout());
-		panelImportExport.setPreferredSize(new Dimension(250,190));
-		panelImportExport.setBackground(Color.GRAY);
-		panelImportExport.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 		
 		panelImportExportButtons.setLayout(new GridLayout(1, 2, 20, 0));
 		panelImportExportButtons.setBackground(Color.GRAY);
@@ -85,6 +90,25 @@ public class CalculatorHistoryPanel extends JPanel{
 	}
 	
 	
+	private void press(String button){
+	    switch (button) {
+	        case "Show History":
+	            cardLayout.show(container, "show history");
+	            break;
+	        case "Clear History":
+	            engine.clearHistory();
+	            break;
+	        case "Load History":
+	            break;
+	        case "Save History":
+	            break;
+	    }
+	}
+	
+	public void setCardLayout(CardLayout cardLayout, JPanel container) {
+	    this.cardLayout = cardLayout;
+	    this.container = container;
+	}
 	
 	private void customizeLabel(JLabel label) {
 		label.setBackground(Color.GRAY);
@@ -95,10 +119,13 @@ public class CalculatorHistoryPanel extends JPanel{
 	}
 
 
-
-	private void press(String button){
-		//historyEngine.press(button);
+	private void customizePanel(JPanel panel) {
+		panel.setLayout(new BorderLayout());
+		panel.setPreferredSize(new Dimension(250,190));
+		panel.setBackground(Color.GRAY);
+		panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 	}
+	
 	
 	private void customizeButton(JButton button,Map<String,Runnable> actions){
 		button.setFocusable(false);
@@ -112,3 +139,5 @@ public class CalculatorHistoryPanel extends JPanel{
 	}
 	
 }
+
+
