@@ -6,14 +6,16 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Consumer;
 
 import calculations.BasicCalculations;
+import gui.CalculatorPanel;
 import gui.CalculatorSettingsFrame;
 
 public final class CalculatorEngine{
 		
 	private final NumberFormat nf =  NumberFormat.getInstance(Locale.US);
-	{nf.setGroupingUsed(true); nf.setMaximumFractionDigits(10);}
+	{nf.setGroupingUsed(true); nf.setMaximumFractionDigits(6);}
 	
 	private final BasicCalculations calculator = new BasicCalculations();
 	private CalculatorSettingsFrame settingsFrame;
@@ -27,6 +29,15 @@ public final class CalculatorEngine{
 	private String historyUp = "";
 	private String historyDown = "";
 	private String function;
+	
+	private int fontSize;
+	private Consumer<Integer> fontListener;
+	
+	private Consumer<Boolean> themeListener;
+	
+	private int fontVar =5;
+	private int decimalVar = 6;
+	private boolean dark = true;
 	
 	private final List<HistoryEntity> historyList = new ArrayList<>();
 	
@@ -52,7 +63,62 @@ public final class CalculatorEngine{
 	    return historyUp;
 	}	
 	
+	public int getFontVar() {
+		return fontVar;
+	}
 	
+	public void setFontVar(int fontVar) {
+		this.fontVar = fontVar;
+	}
+	
+	public int getDecimalVar() {
+		return decimalVar;
+	}
+	
+	public void setDecimalVar(int decimalVar) {
+		nf.setMaximumFractionDigits(decimalVar);
+		this.decimalVar = decimalVar;
+	}
+	
+	public boolean getDark() {
+		return dark;
+	}
+	
+	public void setDark(boolean dark) {
+		this.dark = dark;
+	}
+	
+	
+	
+	public void setFontListener(Consumer<Integer> fontListener) {
+	    this.fontListener = fontListener;
+	}
+	
+	
+	public void setThemeListener(Consumer<Boolean> themeListener) {
+	    this.themeListener = themeListener;
+	}
+	
+	
+	public void setFontSize(int size) {
+	    this.fontSize = 3*(size -5);
+	    this.fontVar = size;
+	    if (fontListener != null) {
+	        fontListener.accept(fontSize);
+	    }
+	}
+	
+	
+	
+	
+	public void setTheme() {
+		
+		if (themeListener != null) themeListener.accept(this.dark);
+	    
+		
+	}
+	
+
 	
 	public double getDoubleValueFromDisplay() {
 		Number number;

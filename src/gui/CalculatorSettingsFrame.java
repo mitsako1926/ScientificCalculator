@@ -26,12 +26,13 @@ public final class CalculatorSettingsFrame extends JFrame{
 		
 		
 		//right panels
-		JPanel generalPanel = new CalculatorGeneralPanel(engine);
+		CalculatorGeneralPanel generalPanel = new CalculatorGeneralPanel(engine);
+		generalPanel.loadSettings();
 		historyPanel = new CalculatorHistoryPanel(engine);
 		historyPanel.setCardLayout(cardLayout, content);
 		showHistoryPanel = new CalculatorShowHistoryPanel(engine);
 		showHistoryPanel.setCardLayout(cardLayout, content);
-		JPanel scientificPanel = new CalculatorScientificPanel(engine);
+		CalculatorScientificPanel scientificPanel = new CalculatorScientificPanel(engine);
 
 		content.add(generalPanel, "general");
 		content.add(historyPanel, "history");

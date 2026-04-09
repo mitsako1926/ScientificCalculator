@@ -1,12 +1,13 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -36,15 +37,14 @@ public final class CalculatorGeneralPanel extends JPanel{
 	private final JPanel panelDecimal = new JPanel();
 	private final JPanel panelTheme = new JPanel();
 	
-	private final JSlider fontSlider = new JSlider(10, 30, 15);
+	private final JSlider fontSlider = new JSlider(0, 10, 5);
 	private final JComboBox<String> decimalComboBox = new JComboBox<>(
 	                            new String[]{"2", "4", "6", "8", "10"} );
+	
 	private final JRadioButton darkRadioButton = new JRadioButton("Dark");
 	private final JRadioButton lightRadioButton = new JRadioButton("Light");
 	private final ButtonGroup themeGroup = new ButtonGroup();
 	
-	private CardLayout cardLayout;
-	private JPanel container;
 		
 	private final CalculatorEngine engine;
 	
@@ -136,21 +136,17 @@ public final class CalculatorGeneralPanel extends JPanel{
 	
 	
 	
-	private void press(String button){
+	void loadSettings() {
+		fontSlider.setValue(engine.getFontVar());
+	    decimalComboBox.setSelectedItem(String.valueOf(engine.getDecimalVar()));
 
-		if(button.equals("reset")) {
-			
-		}else if(button.equals("apply")){
-			
-		}
+	    if (engine.getDark())darkRadioButton.setSelected(true);
+	    else lightRadioButton.setSelected(true);
+	    
 	}
+
 	
-	
-	
-	public void setCardLayout(CardLayout cardLayout, JPanel container) {
-	    this.cardLayout = cardLayout;
-	    this.container = container;
-	}
+
 	
 	
 	private void customizeLabel(JLabel label) {
@@ -176,10 +172,11 @@ public final class CalculatorGeneralPanel extends JPanel{
 	    slider.setBackground(Color.GRAY);
 	    slider.setForeground(Color.WHITE);
 	    slider.setFocusable(false);
-	    slider.setMajorTickSpacing(5);
+	    slider.setMajorTickSpacing(2);
 	    slider.setMinorTickSpacing(1);
-	    slider.setPaintTicks(false);
-	    slider.setPaintLabels(false);
+	    slider.setPaintTicks(true);
+	    slider.setPaintLabels(true);
+	    
 	}
 
 	
@@ -189,6 +186,7 @@ public final class CalculatorGeneralPanel extends JPanel{
 	    comboBox.setForeground(Color.BLACK);
 	    comboBox.setFont(new Font("Arial", Font.PLAIN, 14));
 	    comboBox.setPreferredSize(new Dimension(100,30));
+	    comboBox.setSelectedItem("6");
 	}
 	
 	
@@ -205,8 +203,49 @@ public final class CalculatorGeneralPanel extends JPanel{
 	    button.setFont(new Font("Arial", Font.PLAIN, 14));
 		button.setPreferredSize(new Dimension(115,50));
 	    button.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 2, true));
-
+	    button.addActionListener(new myActionListener());
 	}
+	
+
+//PROBLEMS: 
+//IMPROVEMENTS: FIND BUGS
+
+
+
+	class myActionListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			Object pressed = e.getSource();
+			if(pressed==resetButton) {
+				decimalComboBox.setSelectedItem("6");
+				engine.setDecimalVar(6);
+				
+				fontSlider.setValue(5);
+				engine.setFontSize(5);
+				
+				darkRadioButton.setSelected(true);
+				engine.setDark(true);
+				engine.setTheme();
+				
+			}else if(pressed==applyButton) {
+				
+				if(darkRadioButton.isSelected()) engine.setDark(true);
+				else if(lightRadioButton.isSelected())engine.setDark(false);
+				
+				engine.setTheme();
+				
+				int value = fontSlider.getValue();
+				engine.setFontSize(value);
+
+				int decimal = Integer.parseInt((String)decimalComboBox.getSelectedItem());
+				engine.setDecimalVar(decimal);
+			}
+		}
+		
+	}
+	
+	
 	
 }
 

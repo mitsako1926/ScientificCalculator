@@ -6,8 +6,10 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.OptionalDouble;
 
@@ -26,7 +28,11 @@ public final class CalculatorPanel extends JPanel{
 	private final JLabel historyLabelUp,historyLabelDown;
 	private final JPanel panelDisplay;
 	private final JPanel panelButtons;
+	
+	private List<JButton> buttonList = new ArrayList<>();
 		
+	private final float baseFontSize,baseFontSizeHistoryUp,baseFontSizeHistoryDown;
+	
 	private final String[] buttons = {
 	    "%","≡","C","del",
 		"1/x","x²","√","÷",
@@ -43,7 +49,7 @@ public final class CalculatorPanel extends JPanel{
 		
 		setPreferredSize(new Dimension(400,700));
 		setLayout(new BorderLayout());
-		
+	
 		
 		//MAIN DISPLAY OF THE CALCULATIONS AND THE HISTORY
 		panelDisplay = new JPanel();
@@ -55,7 +61,6 @@ public final class CalculatorPanel extends JPanel{
 		panelButtons = new JPanel();
 		panelButtons.setPreferredSize(new Dimension(400,450));
 		panelButtons.setLayout(new GridLayout(6,4,4,4));
-//		panelButtons.setBackground(Color.DARK_GRAY);
 		panelButtons.setBackground(Color.BLACK);
 		
 		//COMPONENTS OF THE DISPLAY OF CALCULATIONS
@@ -70,6 +75,7 @@ public final class CalculatorPanel extends JPanel{
 		textDisplay.setEditable(false);//key binds are going to be supported in the future
 		textDisplay.setFocusable(false);
 		
+		baseFontSize = textDisplay.getFont().getSize2D();
 		
 		historyLabelUp = new JLabel();
 		historyLabelUp.setPreferredSize(new Dimension(400,50));
@@ -78,13 +84,17 @@ public final class CalculatorPanel extends JPanel{
 		historyLabelUp.setForeground(Color.WHITE);
 		historyLabelUp.setHorizontalAlignment(JLabel.RIGHT);
 		
+		baseFontSizeHistoryUp = historyLabelUp.getFont().getSize2D();
+		
 		historyLabelDown = new JLabel();
 		historyLabelDown.setPreferredSize(new Dimension(400,50));
 		historyLabelDown.setBackground(Color.GRAY);
 		historyLabelDown.setOpaque(true);
 		historyLabelDown.setForeground(Color.WHITE);
 		historyLabelDown.setHorizontalAlignment(JLabel.RIGHT);
+		historyLabelDown.setFont(new Font("Arial", Font.BOLD, 15));
 		
+		baseFontSizeHistoryDown = historyLabelDown.getFont().getSize2D();
 		
 		//WE ADD THE COMPONENTS TO THE DISPLAY OF CALCULATIONS
 		panelDisplay.add(historyLabelUp,BorderLayout.NORTH);
@@ -127,6 +137,63 @@ public final class CalculatorPanel extends JPanel{
 		//ADDING THE 2 MAIN DISPLAY PANELS TO THE MAIN PANEL OF THE FRAME 
 		add(panelDisplay,BorderLayout.NORTH);
 		add(panelButtons,BorderLayout.SOUTH);
+		
+		engine.setFontListener(offset -> {
+			    float newSize = baseFontSize + offset;
+			    textDisplay.setFont(textDisplay.getFont().deriveFont(newSize));
+			    
+			    float newSizeHistoryDown = baseFontSizeHistoryDown + offset;
+			    if(newSizeHistoryDown<=3)newSizeHistoryDown=6;
+			    historyLabelDown.setFont(historyLabelDown.getFont().deriveFont(newSizeHistoryDown));
+
+			    float newSizeHistoryUp = baseFontSizeHistoryUp + offset;
+			    if(newSizeHistoryUp<=3)newSizeHistoryUp=6;
+			    historyLabelUp.setFont(historyLabelUp.getFont().deriveFont(newSizeHistoryUp));
+			    
+		});
+		
+		engine.setThemeListener(isDark -> {
+			if(isDark) {
+				historyLabelDown.setBackground(Color.GRAY);
+				historyLabelDown.setForeground(Color.WHITE);
+				
+				historyLabelUp.setBackground(Color.GRAY);
+				historyLabelUp.setForeground(Color.WHITE);
+				
+				textDisplay.setBackground(Color.GRAY);
+				textDisplay.setForeground(Color.WHITE);
+				
+				buttonList.forEach((button)->{
+					button.setBackground(Color.GRAY);
+				    button.setForeground(Color.WHITE);
+				    button.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 2, true));
+				    
+				});
+				
+				panelButtons.setBackground(Color.BLACK);
+
+			}else {
+				historyLabelDown.setBackground(Color.WHITE);
+				historyLabelDown.setForeground(Color.DARK_GRAY);
+				
+				historyLabelUp.setBackground(Color.WHITE);
+				historyLabelUp.setForeground(Color.DARK_GRAY);
+				
+				textDisplay.setBackground(Color.WHITE);
+				textDisplay.setForeground(Color.DARK_GRAY);
+				
+				buttonList.forEach((button)->{
+					button.setBackground(Color.WHITE);
+				    button.setForeground(Color.DARK_GRAY);
+				    button.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2, true));
+				});
+				
+				panelButtons.setBackground(Color.WHITE);
+				
+			}
+			
+		});
+		
 	}
 	
 	private void customizeButton(JButton button,Map<String,Runnable> actions) {
@@ -136,6 +203,8 @@ public final class CalculatorPanel extends JPanel{
 	    button.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 2, true));
 	    button.setFont(new Font("Arial", Font.PLAIN, 20));
 	    button.addActionListener(e -> actions.get(button.getText()).run());
+	    
+	    buttonList.add(button);
 	}	
 	
 	private void press(String buttonPressed){
@@ -153,6 +222,9 @@ public final class CalculatorPanel extends JPanel{
 	    historyLabelDown.setText(engine.getHistoryDown());
 	    historyLabelUp.setText(engine.getHistoryUp());
 	}
+	
+	
+
 	
 
 }
