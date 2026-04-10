@@ -36,6 +36,7 @@ public final class CalculatorGeneralPanel extends JPanel{
 	private final JPanel panelFont = new JPanel();
 	private final JPanel panelDecimal = new JPanel();
 	private final JPanel panelTheme = new JPanel();
+	private final JPanel comboWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 15));
 	
 	private final JSlider fontSlider = new JSlider(0, 10, 5);
 	private final JComboBox<String> decimalComboBox = new JComboBox<>(
@@ -95,10 +96,9 @@ public final class CalculatorGeneralPanel extends JPanel{
 		panelFont.add(fontSlider, BorderLayout.CENTER);
 		
 		//SET DECIMAL PRECISION PANEL
-		customizePanel(panelDecimal);		
+		customizePanel(panelDecimal);
 		customizeComboBox(decimalComboBox);
 
-		JPanel comboWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 15));
 		comboWrapper.setBackground(Color.GRAY);
 		comboWrapper.add(decimalComboBox);
 		
@@ -132,6 +132,11 @@ public final class CalculatorGeneralPanel extends JPanel{
 		add(labelGeneral,BorderLayout.NORTH);
 		add(panelSettings,BorderLayout.CENTER);
 		add(panelButtons,BorderLayout.SOUTH);
+		
+		engine.setThemeListener(isDark->{
+			if(isDark) changeToDark();
+			else changeToLight();
+		});
 	}
 	
 	
@@ -145,9 +150,7 @@ public final class CalculatorGeneralPanel extends JPanel{
 	    
 	}
 
-	
 
-	
 	
 	private void customizeLabel(JLabel label) {
 		label.setBackground(Color.GRAY);
@@ -208,7 +211,7 @@ public final class CalculatorGeneralPanel extends JPanel{
 	
 
 //PROBLEMS: 
-//IMPROVEMENTS: FIND BUGS
+//IMPROVEMENTS: FIND BUGS, IMPROVE READABILITY
 
 
 
@@ -246,6 +249,91 @@ public final class CalculatorGeneralPanel extends JPanel{
 	}
 	
 	
+	
+	private void changeToDark() {
+		//LABELS
+		customizeLabel(labelGeneral);
+		labelGeneral.setFont(new Font("Arial",Font.BOLD,20));
+		labelGeneral.setPreferredSize(new Dimension(350,70));
+		
+		customizeLabel(labelFont);
+		
+		customizeLabel(labelDecimal);
+		
+		customizeLabel(labelTheme);
+		
+		//BUTTONS
+		customizeButton(applyButton);
+		customizeButton(resetButton);
+		
+		//OTHER
+		panelButtons.setBackground(Color.GRAY);
+		panelSettings.setBackground(Color.GRAY);
+		
+		customizePanel(panelFont);
+		customizeSlider(fontSlider);
+		
+		comboWrapper.setBackground(Color.GRAY);
+		customizePanel(panelDecimal);
+		customizeComboBox(decimalComboBox);
+		
+		customizePanel(panelTheme);
+		panelTheme.setLayout(new GridLayout(3, 1, 5, 5));
+		
+		customizeRadioButton(darkRadioButton);
+		customizeRadioButton(lightRadioButton);
+		
+		darkRadioButton.setSelected(true);
+	}
+	
+	
+	private void changeToLight() {
+		//LABELS
+		labelGeneral.setBackground(Color.WHITE);
+		labelGeneral.setForeground(Color.DARK_GRAY);
+		
+		labelFont.setBackground(Color.WHITE);
+		labelFont.setForeground(Color.DARK_GRAY);
+		
+		labelDecimal.setBackground(Color.WHITE);
+		labelDecimal.setForeground(Color.DARK_GRAY);
+		
+		labelTheme.setBackground(Color.WHITE);
+		labelTheme.setForeground(Color.DARK_GRAY);
+		
+		//BUTTONS
+		applyButton.setBackground(Color.WHITE);
+		applyButton.setForeground(Color.DARK_GRAY);
+		applyButton.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2, true));
+		
+		resetButton.setBackground(Color.WHITE);
+		resetButton.setForeground(Color.DARK_GRAY);
+		resetButton.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2, true));
+	    
+		//PANELS
+		panelButtons.setBackground(Color.WHITE);
+		panelSettings.setBackground(Color.WHITE);
+		panelFont.setBackground(Color.WHITE);
+		panelDecimal.setBackground(Color.WHITE);
+		panelTheme.setBackground(Color.WHITE);
+		comboWrapper.setBackground(Color.WHITE);
+		
+		//RADIO BUTTONS
+		darkRadioButton.setForeground(Color.DARK_GRAY);
+		darkRadioButton.setBackground(Color.WHITE);
+		
+		lightRadioButton.setForeground(Color.DARK_GRAY);
+		lightRadioButton.setBackground(Color.WHITE);
+		lightRadioButton.setSelected(true);
+		
+		//SLIDER
+		fontSlider.setBackground(Color.WHITE);
+		fontSlider.setForeground(Color.DARK_GRAY);
+	    
+		//COMBOBOX
+		decimalComboBox.setBackground(Color.WHITE);
+	    decimalComboBox.setForeground(Color.DARK_GRAY);
+	}
 	
 }
 

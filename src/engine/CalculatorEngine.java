@@ -9,7 +9,6 @@ import java.util.Locale;
 import java.util.function.Consumer;
 
 import calculations.BasicCalculations;
-import gui.CalculatorPanel;
 import gui.CalculatorSettingsFrame;
 
 public final class CalculatorEngine{
@@ -33,7 +32,7 @@ public final class CalculatorEngine{
 	private int fontSize;
 	private Consumer<Integer> fontListener;
 	
-	private Consumer<Boolean> themeListener;
+	private final List<Consumer<Boolean>> themeListeners = new ArrayList<>();
 	
 	private int fontVar =5;
 	private int decimalVar = 6;
@@ -96,7 +95,7 @@ public final class CalculatorEngine{
 	
 	
 	public void setThemeListener(Consumer<Boolean> themeListener) {
-	    this.themeListener = themeListener;
+	    this.themeListeners.add(themeListener);
 	}
 	
 	
@@ -113,8 +112,10 @@ public final class CalculatorEngine{
 	
 	public void setTheme() {
 		
-		if (themeListener != null) themeListener.accept(this.dark);
-	    
+		if (themeListeners != null) 
+			for(Consumer<Boolean> listener : themeListeners) {
+				listener.accept(this.dark);
+			} 
 		
 	}
 	

@@ -40,7 +40,7 @@ public final class CalculatorSettingsFrame extends JFrame{
 		content.add(scientificPanel, "scientific");
 
 		//sidebar
-		CalculatorSettingsPanel sidebar = new CalculatorSettingsPanel(cardLayout, content);
+		CalculatorSettingsPanel sidebar = new CalculatorSettingsPanel(cardLayout, content,engine);
 
 		setLayout(new BorderLayout());
 		add(sidebar, BorderLayout.WEST);

@@ -1,12 +1,13 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -26,10 +27,8 @@ public final class CalculatorScientificPanel extends JPanel{
 		    							"abs","sin", "cos", "tan", "cot",
 		    							"deg","asin", "acos", "atan", "acot"
 									 };
-	
-	private CardLayout cardLayout;
-	private JPanel container;
-	
+
+	private final List<JButton> buttonsList = new ArrayList<>();
 	private final CalculatorEngine engine;
 	
 	CalculatorScientificPanel(CalculatorEngine engine){
@@ -57,6 +56,11 @@ public final class CalculatorScientificPanel extends JPanel{
 		
 		add(panelButtons,BorderLayout.SOUTH);
 		add(labelScientific,BorderLayout.NORTH);
+		
+		engine.setThemeListener(isDark->{
+			if(isDark) changeToDark();
+			else changeToLight();
+		});
 	}
 	
 	
@@ -70,17 +74,11 @@ public final class CalculatorScientificPanel extends JPanel{
 	
 	
 	
-	public void setCardLayout(CardLayout cardLayout, JPanel container) {
-	    this.cardLayout = cardLayout;
-	    this.container = container;
-	}
-	
-	
 	private void customizeLabel(JLabel label) {
 		label.setBackground(Color.GRAY);
 		label.setForeground(Color.WHITE);
-		label.setFont(new Font("Arial",Font.BOLD,15));
-		label.setPreferredSize(new Dimension(350,30));
+		label.setFont(new Font("Arial",Font.BOLD,20));
+		label.setPreferredSize(new Dimension(350,70));
 		label.setOpaque(true);
 		label.setHorizontalAlignment(JLabel.CENTER);
 	}
@@ -95,8 +93,46 @@ public final class CalculatorScientificPanel extends JPanel{
 		button.setPreferredSize(new Dimension(100,50));
 	    button.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 2, true));
 	    button.addActionListener(e->press(button.getText()));
+	    
 	    panelButtons.add(button);
+	    
+	    buttonsList.add(button);
 	}
+	
+	
+	
+	
+	private void changeToDark(){
+		setBackground(Color.GRAY);
+		
+		customizeLabel(labelScientific);
+		
+		buttonsList.forEach(button->{
+			button.setBackground(Color.GRAY);
+			button.setForeground(Color.WHITE);
+			button.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 2, true));
+		});
+		
+		panelButtons.setBackground(Color.BLACK);
+	}
+	
+	
+	private void changeToLight(){
+		setBackground(Color.WHITE);
+		
+		labelScientific.setBackground(Color.WHITE);
+		labelScientific.setForeground(Color.DARK_GRAY);
+		
+		buttonsList.forEach(button->{
+			button.setBackground(Color.WHITE);
+			button.setForeground(Color.DARK_GRAY);
+			button.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2, true));
+		});
+		
+		panelButtons.setBackground(Color.WHITE);
+	}
+	
+	
 	
 }
 

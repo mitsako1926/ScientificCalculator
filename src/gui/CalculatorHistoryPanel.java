@@ -5,16 +5,15 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Frame;
 import java.awt.GridLayout;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -33,6 +32,8 @@ public class CalculatorHistoryPanel extends JPanel{
 	
 	private CardLayout cardLayout;
 	private JPanel container;
+	
+	private final List<JButton> buttonsList = new ArrayList<>();
 	
 	private final CalculatorEngine engine;
 	
@@ -85,6 +86,11 @@ public class CalculatorHistoryPanel extends JPanel{
 		add(labelHistory,BorderLayout.NORTH);
 		add(panelManageHistory,BorderLayout.CENTER);
 		add(panelImportExport,BorderLayout.SOUTH);
+		
+		engine.setThemeListener(isDark->{
+			if(isDark) changeToDark();
+			else changeToLight();
+		});
 	}
 	
 	
@@ -134,7 +140,57 @@ public class CalculatorHistoryPanel extends JPanel{
 	    button.addActionListener(e -> actions.get(button.getText()).run());
 		button.setPreferredSize(new Dimension(150,75));
 	    button.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 2, true));
+	    
+	    buttonsList.add(button);
+	}
+	
+	
+	
+	private void changeToDark() {
+		customizeLabel(labelHistory);
+		labelHistory.setFont(new Font("Arial",Font.BOLD,20));
+		labelHistory.setPreferredSize(new Dimension(250,70));
 
+		customizeLabel(labelManageHistory);
+
+		customizeLabel(labelImportExport);
+
+		customizePanel(panelManageHistory);
+		customizePanel(panelImportExport);
+				
+		panelManageHistoryButtons.setBackground(Color.GRAY);
+		panelImportExportButtons.setBackground(Color.GRAY);
+		
+		buttonsList.forEach((button)->{
+			button.setForeground(Color.WHITE);
+			button.setBackground(Color.GRAY);
+			button.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 2, true));
+		});
+	}
+	
+	
+	
+	private void changeToLight() {
+		labelHistory.setBackground(Color.WHITE);
+		labelHistory.setForeground(Color.DARK_GRAY);
+		
+		labelManageHistory.setBackground(Color.WHITE);
+		labelManageHistory.setForeground(Color.DARK_GRAY);
+		
+		labelImportExport.setBackground(Color.WHITE);
+		labelImportExport.setForeground(Color.DARK_GRAY);
+		
+		panelImportExport.setBackground(Color.WHITE);
+		panelManageHistory.setBackground(Color.WHITE);
+		
+		panelManageHistoryButtons.setBackground(Color.WHITE);
+		panelImportExportButtons.setBackground(Color.WHITE);
+		
+		buttonsList.forEach((button)->{
+			button.setForeground(Color.DARK_GRAY);
+			button.setBackground(Color.WHITE);
+			button.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2, true));
+		});
 	}
 	
 }

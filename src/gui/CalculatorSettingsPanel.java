@@ -25,8 +25,11 @@ public class CalculatorSettingsPanel extends JPanel {
     private final JButton showGeneralButton = new JButton("General");
     private final JButton showScientificButton = new JButton("Scientific");
     
-    CalculatorSettingsPanel(CardLayout cardLayout,JPanel container) {
+    private final CalculatorEngine engine;
+    
+    CalculatorSettingsPanel(CardLayout cardLayout,JPanel container,CalculatorEngine engine) {
 
+    	this.engine = engine;
     	this.cardLayout = cardLayout;
     	this.container = container;
     	
@@ -49,6 +52,10 @@ public class CalculatorSettingsPanel extends JPanel {
         
         add(panelButtons,BorderLayout.NORTH);
     
+        engine.setThemeListener((isDark)->{
+        	if(isDark) changeToDark();   
+        	else changeToLight();
+        });
     }
     
 	
@@ -64,7 +71,38 @@ public class CalculatorSettingsPanel extends JPanel {
         });
     	
     }
+    
+    
+    private void changeToLight() {
+    	setBackground(Color.WHITE);
+		setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1, true));
+		
+		panelButtons.setBackground(Color.WHITE);
+		
+		showGeneralButton.setBackground(Color.WHITE);
+		showGeneralButton.setForeground(Color.DARK_GRAY);
+		showGeneralButton.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2, true));
+		
+		showHistoryButton.setBackground(Color.WHITE);
+		showHistoryButton.setForeground(Color.DARK_GRAY);
+		showHistoryButton.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2, true));
+		
+		showScientificButton.setBackground(Color.WHITE);
+		showScientificButton.setForeground(Color.DARK_GRAY);
+		showScientificButton.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2, true));
+    }
 	
+    
+    private void changeToDark() {
+    	setBackground(Color.GRAY);
+		setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1, true));
+		
+		panelButtons.setBackground(Color.GRAY);
+		
+		customizeButton(showGeneralButton,"general");
+        customizeButton(showHistoryButton,"history");
+        customizeButton(showScientificButton,"scientific");
+    }
 	
 }
 
