@@ -1,21 +1,29 @@
 package engine;
 
+import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-public final class HistoryEntity {
+public final class HistoryEntity implements Serializable{
 
 	private final NumberFormat nf =  NumberFormat.getInstance(Locale.US);
-	{nf.setGroupingUsed(true); nf.setMaximumFractionDigits(10);}
+	
+	{	
+		nf.setGroupingUsed(true);
+		nf.setMaximumFractionDigits(10);
+	}
 	
 	private final double firstNumber;
 	private final double secondNumber;
 	private final double result;
+	
 	private final String operator;
 	private final String historyUp;
 	private final String function;
+	
 	private final boolean error;
 
+	private static final long serialVersionUID = 1L;
 	
 	HistoryEntity(double firstNumber,double secondNumber,double result,String operator,String historyUp, String function, boolean error){
 		this.firstNumber = firstNumber;

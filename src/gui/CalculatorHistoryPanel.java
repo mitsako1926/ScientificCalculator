@@ -4,14 +4,15 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FileDialog;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -95,24 +96,55 @@ public class CalculatorHistoryPanel extends JPanel{
 	
 	
 	private void press(String button){
-	    switch (button) {
+	    		
+		switch (button) {
 	        case "Show History":
 	            cardLayout.show(container, "show history");
 	            break;
 	        case "Clear History":
 	            engine.clearHistory();
 	            break;
-	        case "Load History":
+	        case "Load History":{
+	        	FileDialog dialog = new FileDialog((Frame) null, "Load History", FileDialog.LOAD);
+	            dialog.setVisible(true);
+
+	            String directory = dialog.getDirectory();
+	            String file = dialog.getFile();
+
+	            if (file != null) {
+	                String path = directory + file;
+	                engine.loadHistory(path);
+	            }
+	        }
 	            break;
-	        case "Save History":
+	        case "Save History":{
+	        	FileDialog dialog = new FileDialog((Frame) null, "Save History", FileDialog.SAVE);
+	            dialog.setVisible(true);
+
+	            String directory = dialog.getDirectory();
+	            String file = dialog.getFile();
+
+	            if (file != null) {
+	            	if (!file.endsWith(".dat")) {
+	                    file += ".dat";
+	                }
+	            	
+	            	String path = directory + file;
+	                engine.saveHistory(path);
+	            }
+	        }
 	            break;
 	    }
 	}
+	
+	
 	
 	public void setCardLayout(CardLayout cardLayout, JPanel container) {
 	    this.cardLayout = cardLayout;
 	    this.container = container;
 	}
+	
+	
 	
 	private void customizeLabel(JLabel label) {
 		label.setBackground(Color.GRAY);
@@ -124,12 +156,14 @@ public class CalculatorHistoryPanel extends JPanel{
 	}
 
 
+	
 	private void customizePanel(JPanel panel) {
 		panel.setLayout(new BorderLayout());
 		panel.setPreferredSize(new Dimension(250,190));
 		panel.setBackground(Color.GRAY);
 		panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 	}
+	
 	
 	
 	private void customizeButton(JButton button,Map<String,Runnable> actions){
@@ -192,6 +226,8 @@ public class CalculatorHistoryPanel extends JPanel{
 			button.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2, true));
 		});
 	}
+	
+	
 	
 }
 

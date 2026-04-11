@@ -1,6 +1,13 @@
 package engine;
 
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -99,6 +106,7 @@ public final class CalculatorEngine{
 	}
 	
 	
+	
 	public void setFontSize(int size) {
 	    this.fontSize = 3*(size -5);
 	    this.fontVar = size;
@@ -131,6 +139,46 @@ public final class CalculatorEngine{
 			return 0;
 		}
 	}
+	
+	
+	
+	public void saveHistory(String filePath) {
+	    try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filePath))) {
+	        out.writeObject(historyList);
+	    } catch (IOException e) {
+	        display = "Error in save history";
+	    }
+	}
+	
+	
+	//FUTURE FEATURE
+	public void saveHistoryAsText(String filePath) {
+	    try (PrintWriter writer = new PrintWriter(new FileWriter(filePath))) {
+	        for (HistoryEntity entry : historyList.reversed()) {
+	            writer.println(entry.toString());
+	        }
+	    } catch (IOException e) {
+	    	display = "Error in save history";
+	    }
+	}
+	
+	
+	
+	@SuppressWarnings("unchecked")
+	public void loadHistory(String filePath) {
+	    try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(filePath))) {
+	        List<HistoryEntity> loaded = (List<HistoryEntity>) in.readObject();
+	        
+	        historyList.clear();
+	        historyList.addAll(loaded);
+
+	        refreshSettingsPanelHistory();
+
+	    } catch (IOException | ClassNotFoundException e) {
+	    	display = "Error in load history";
+	    }
+	}
+	
 	
 	
 	
