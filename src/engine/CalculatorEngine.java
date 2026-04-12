@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
 
+import calculations.AdvancedCalculations;
 import calculations.BasicCalculations;
 import gui.CalculatorSettingsFrame;
 
@@ -24,12 +25,15 @@ public final class CalculatorEngine{
 	{nf.setGroupingUsed(true); nf.setMaximumFractionDigits(6);}
 	
 	private final BasicCalculations calculator = new BasicCalculations();
+	private final AdvancedCalculations calculatorAdvanced = new AdvancedCalculations();
 	private CalculatorSettingsFrame settingsFrame;
 	
 	private Runnable displayRefreshListener;
 	
 	private double firstNumber,secondNumber,secondNumberArgument;
+	
 	private boolean startNewNumber = true;
+	
 	private String operator;
 	private String display = "0";
 	private String historyUp = "";
@@ -37,6 +41,7 @@ public final class CalculatorEngine{
 	private String function;
 	
 	private int fontSize;
+	
 	private Consumer<Integer> fontListener;
 	
 	private final List<Consumer<Boolean>> themeListeners = new ArrayList<>();
@@ -130,6 +135,10 @@ public final class CalculatorEngine{
 
 	
 	public double getDoubleValueFromDisplay() {
+		
+		if (display.equals("π")) return Math.PI;
+	    if (display.equals("e")) return Math.E;
+		
 		Number number;
 		try {
 			number = nf.parse(display);
@@ -338,16 +347,16 @@ public final class CalculatorEngine{
 		String raw = display.replace(",", "").replace("-", "").replace(".", "");
 		if (raw.length() >= 15) return;
 		
-	    if(startNewNumber) {
-	    	display = num;
-	        startNewNumber = false;
-	    } else if(display.equals("0")||display.equals("-0")){
-	    	display = num;
-	    	startNewNumber = false;
-	    }else  {
-	    	display += num;
-	    	display = reformatDisplay(display);
-	    }
+		if (startNewNumber || display.equals("0") || display.equals("-0")) {
+		    display = num;
+		    startNewNumber = false;
+		}else {
+			
+			if(display.contains("e")||display.contains("π")||!display.isBlank())return;
+		    
+			display += num;
+		    display = reformatDisplay(display);
+		}
 	}
 	
 
@@ -416,7 +425,7 @@ public final class CalculatorEngine{
 	        case "+": result = calculator.add(firstNumber, secondNumber); break;
 	        case "-": result = calculator.subtract(firstNumber, secondNumber); break;
 	        case "×": result = calculator.multiply(firstNumber, secondNumber); break;
-	        case "÷": result = calculator.devide(firstNumber, secondNumber); break;
+	        case "÷": result = calculator.divide(firstNumber, secondNumber); break;
 	        case "%": result = calculator.modular(firstNumber, secondNumber); break;
 	    }
 	    
@@ -509,7 +518,7 @@ public final class CalculatorEngine{
 
 	
 	private void applyFunction(String func) {
-		
+
 		if(display.equals("Error")||startNewNumber) return;
 		function = func;
 
@@ -520,18 +529,8 @@ public final class CalculatorEngine{
 		if(result == null) {
             
 			String functionText = "";
-
-	        switch (func) {
-	            case "√":
-	                functionText = "√(" + nf.format(number) + ")";
-	                break;
-	            case "1/":
-	                functionText = "1/(" + nf.format(number) + ")";
-	                break;
-	            case "x²":
-	                functionText = nf.format(number) + "²";
-	                break;
-	        }
+			functionText = helperFunctionText(func,functionText,number);
+			
 	        
 	        if (operator != null) {
 	            historyDown = nf.format(firstNumber) + " " + operator + " " + functionText + " = Error";
@@ -546,7 +545,7 @@ public final class CalculatorEngine{
 
 			return;
 		}
-		
+
 		display=nf.format(result);
 		
 		if(operator!=null) {
@@ -556,14 +555,7 @@ public final class CalculatorEngine{
 	    
 		if(!historyDown.isBlank()) historyUp = historyDown;
 			
-		switch(func) {
-			case "√":historyDown = "√(" + nf.format(number) + ") = " + nf.format(result);
-				break;
-			case "x²":historyDown = nf.format(number) + "² = "+ nf.format(result);
-				break;
-			case "1/":historyDown = "1/(" + nf.format(number) + ") = "+ nf.format(result);
-				break;
-		}
+		helperHistoryDown(func,number,result);
 		
 		historyList.add(new HistoryEntity(number,0,result,operator,historyUp,function,false));
 		refreshSettingsPanelHistory();
@@ -573,20 +565,218 @@ public final class CalculatorEngine{
 
 	
 	
-	private Double executeFunction(String function,double number) {
-		switch(function) {
-		case "√":if(number<0)return null;
-				 return calculator.squareRoot(number);
-				 
-		case "x²":return calculator.square(number);
-		
-		case "1/":if(number==0)return null;
-		 		   return calculator.divideByNumber(number);
-		default:return null;
-		}
+	public void scientificFunctionPressed(String scientificFunction) {
+		applyFunction(scientificFunction);
+		refreshMainDisplay();
 	}
 	
 	
+	
+	private void helperHistoryDown(String func, double number, Double result) {
+		
+		switch(func) {
+		    case "√":
+		        historyDown = "√(" + nf.format(number) + ") = " + nf.format(result);
+		        break;
+		    case "x²":
+		        historyDown = nf.format(number) + "² = " + nf.format(result);
+		        break;
+		    case "1/":
+		        historyDown = "1/(" + nf.format(number) + ") = " + nf.format(result);
+		        break;
+		    case "n!":
+		        historyDown = nf.format(number) + "! = " + nf.format(result);
+		        break;
+		    case "ln":
+		        historyDown = "ln(" + nf.format(number) + ") = " + nf.format(result);
+		        break;
+		    case "log":
+		        historyDown = "log(" + nf.format(number) + ") = " + nf.format(result);
+		        break;
+		    case "10^x":
+		        historyDown = "10^(" + nf.format(number) + ") = " + nf.format(result);
+		        break;
+		    case "abs":
+		        historyDown = "|" + nf.format(number) + "| = " + nf.format(result);
+		        break;
+		    case "sin":
+		        historyDown = "sin(" + nf.format(number) + ") = " + nf.format(result);
+		        break;
+		    case "cos":
+		        historyDown = "cos(" + nf.format(number) + ") = " + nf.format(result);
+		        break;
+		    case "tan":
+		        historyDown = "tan(" + nf.format(number) + ") = " + nf.format(result);
+		        break;
+		    case "cot":
+		        historyDown = "cot(" + nf.format(number) + ") = " + nf.format(result);
+		        break;
+		    case "asin":
+		        historyDown = "asin(" + nf.format(number) + ") = " + nf.format(result);
+		        break;
+		    case "acos":
+		        historyDown = "acos(" + nf.format(number) + ") = " + nf.format(result);
+		        break;
+		    case "atan":
+		        historyDown = "atan(" + nf.format(number) + ") = " + nf.format(result);
+		        break;
+		    case "acot":
+		        historyDown = "acot(" + nf.format(number) + ") = " + nf.format(result);
+		        break;
+		}
+		
+	}
+
+	private String helperFunctionText(String func,String functionText,double number) {
+		
+		switch (func) {
+		    case "√":
+		        functionText = "√(" + nf.format(number) + ")";
+		        break;
+		    case "1/":
+		        functionText = "1/(" + nf.format(number) + ")";
+		        break;
+		    case "x²":
+		        functionText = nf.format(number) + "²";
+		        break;
+		    case "n!":
+		        functionText = nf.format(number) + "!";
+		        break;
+		    case "ln":
+		        functionText = "ln(" + nf.format(number) + ")";
+		        break;
+		    case "log":
+		        functionText = "log(" + nf.format(number) + ")";
+		        break;
+		    case "10^x":
+		        functionText = "10^(" + nf.format(number) + ")";
+		        break;
+		    case "abs":
+		        functionText = "|" + nf.format(number) + "|";
+		        break;
+		    case "sin":
+		        functionText = "sin(" + nf.format(number) + ")";
+		        break;
+		    case "cos":
+		        functionText = "cos(" + nf.format(number) + ")";
+		        break;
+		    case "tan":
+		        functionText = "tan(" + nf.format(number) + ")";
+		        break;
+		    case "cot":
+		        functionText = "cot(" + nf.format(number) + ")";
+		        break;
+		    case "asin":
+		        functionText = "asin(" + nf.format(number) + ")";
+		        break;
+		    case "acos":
+		        functionText = "acos(" + nf.format(number) + ")";
+		        break;
+		    case "atan":
+		        functionText = "atan(" + nf.format(number) + ")";
+		        break;
+		    case "acot":
+		        functionText = "acot(" + nf.format(number) + ")";
+		        break;
+		}
+		
+		return functionText;
+		
+	}
+	
+	
+	
+	
+	private Double executeFunction(String function,double number) {
+		
+		switch(function) {
+			case "√":if(number<0)return null;
+				return calculator.squareRoot(number);
+					 
+			case "x²":return calculator.square(number);
+			
+			case "1/":if(number==0)return null;
+			 	return calculator.divideByNumber(number);
+			case "n!":
+			    if (number < 0 || number != Math.floor(number)) return null;
+			    return calculatorAdvanced.factorial(number);   
+			case "ln":
+			    if (number <= 0) return null;
+			    return calculatorAdvanced.ln(number);
+	
+			case "log":
+			    if (number <= 0) return null;
+			    return calculatorAdvanced.log(number);
+	
+			case "10^x":
+			    return calculatorAdvanced.tenPower(number);
+	
+			case "abs":
+			    return calculatorAdvanced.abs(number);
+	
+			case "sin":
+			    return calculatorAdvanced.sin(number);
+	
+			case "cos":
+			    return calculatorAdvanced.cos(number);
+	
+			case "tan": {
+			    double angle = number;
+			    if (calculatorAdvanced.isDegreeMode()) {
+			        angle = Math.toRadians(angle);
+			    }
+
+			    if (Math.abs(Math.cos(angle)) < 1e-10) return null;
+			    return calculatorAdvanced.tan(number);
+			}
+
+			case "cot": {
+			    double angle = number;
+			    if (calculatorAdvanced.isDegreeMode()) {
+			        angle = Math.toRadians(angle);
+			    }
+
+			    if (Math.abs(Math.sin(angle)) < 1e-10) return null;
+			    return calculatorAdvanced.cot(number);
+			}
+	
+			case "asin":
+			    if (number < -1 || number > 1) return null;
+			    return calculatorAdvanced.asin(number);
+	
+			case "acos":
+			    if (number < -1 || number > 1) return null;
+			    return calculatorAdvanced.acos(number);
+	
+			case "atan":
+			    return calculatorAdvanced.atan(number);
+	
+			case "acot":
+			    if (number == 0) return null;
+			    return calculatorAdvanced.acot(number);
+				
+			default:return null;
+		}
+	}
+
+	
+	
+	public void toggleDegreeMode() {
+		calculatorAdvanced.toggleDegreeMode();
+		refreshMainDisplay();
+	}
+	
+	
+	
+	public void addScientificNumber(String number) {
+		if(number=="rand") {
+			String random = nf.format(calculatorAdvanced.random());
+			appendNumber(random);
+			return;
+		}
+		appendNumber(number);
+		refreshMainDisplay();
+	}
 	
 	
 }

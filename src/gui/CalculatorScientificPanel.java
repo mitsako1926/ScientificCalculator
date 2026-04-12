@@ -64,14 +64,7 @@ public final class CalculatorScientificPanel extends JPanel{
 	}
 	
 	
-	
-	private void press(String buttonPressed){
-		switch(buttonPressed) {
-		
-		}
-		
-	}
-	
+
 	
 	
 	private void customizeLabel(JLabel label) {
@@ -130,6 +123,99 @@ public final class CalculatorScientificPanel extends JPanel{
 		});
 		
 		panelButtons.setBackground(Color.WHITE);
+	}
+	
+	
+	
+	private void press(String buttonPressed) {
+
+	    if(buttonPressed==null)return;
+		
+		switch (buttonPressed) {
+			//mas dinoun number
+	        case "π":
+	            engine.addScientificNumber("π");
+	            break;
+
+	        case "e":
+	            engine.addScientificNumber("e");
+	            break;
+
+	        case "rand":
+	            engine.addScientificNumber("rand");
+	            break;
+	        //tha doume  
+	        case "x^y":
+	            // engine.setPowerOperator();
+	            break;
+
+	        case "(":
+	            // engine.insertLeftParenthesis();
+	            break;
+
+	        case ")":
+	            // engine.insertRightParenthesis();
+	            break;
+
+	        case "deg":
+	            engine.toggleDegreeMode();
+	            break;
+	            
+	        case "n!":
+	        	engine.scientificFunctionPressed("n!");
+	            break;
+	            
+	        case "ln":
+	        	engine.scientificFunctionPressed("ln");
+	            break;
+
+	        case "log":
+	        	engine.scientificFunctionPressed("log");
+	            break;
+
+	        case "10^x":
+	        	engine.scientificFunctionPressed("10^x");
+	            break;
+	            
+	        case "abs":
+	        	engine.scientificFunctionPressed("abs");
+	            break;
+
+	        case "sin":
+	        	engine.scientificFunctionPressed("sin");
+	            break;
+
+	        case "cos":
+	        	engine.scientificFunctionPressed("cos");
+	            break;
+
+	        case "tan":
+	        	engine.scientificFunctionPressed("tan");
+	            break;
+
+	        case "cot":
+	        	engine.scientificFunctionPressed("cot");
+	            break;
+
+	        case "asin":
+	        	engine.scientificFunctionPressed("asin");
+	            break;
+
+	        case "acos":
+	        	engine.scientificFunctionPressed("acos");
+	            break;
+
+	        case "atan":
+	        	engine.scientificFunctionPressed("atan");
+	            break;
+
+	        case "acot":
+	        	engine.scientificFunctionPressed("acot");
+	            break;
+
+	        default:
+	            break;
+	    }
 	}
 	
 	

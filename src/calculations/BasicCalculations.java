@@ -16,7 +16,7 @@ public final class BasicCalculations {
 		return firstNumber * secondNumber;
 	}
 	
-	public double devide(double firstNumber,double  secondNumber){
+	public double divide(double firstNumber,double  secondNumber){
 		return firstNumber / secondNumber;
 	}
 	
