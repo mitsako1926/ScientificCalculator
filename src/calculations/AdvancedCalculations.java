@@ -74,6 +74,10 @@ public final class AdvancedCalculations {
     public int random() {
         return (int) (Math.random() * 1000);
     }
+    
+    public double power(double number,double power) {
+        return  Math.pow(number,power);
+    }
 	
     public void toggleDegreeMode() {
         isDegreeMode = !isDegreeMode;

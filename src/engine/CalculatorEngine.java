@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
 
+import javax.swing.SwingUtilities;
+
 import calculations.AdvancedCalculations;
 import calculations.BasicCalculations;
 import gui.CalculatorSettingsFrame;
@@ -181,7 +183,7 @@ public final class CalculatorEngine{
 	        historyList.clear();
 	        historyList.addAll(loaded);
 
-	        refreshSettingsPanelHistory();
+	        SwingUtilities.invokeLater(() -> refreshSettingsPanelHistory());
 
 	    } catch (IOException | ClassNotFoundException e) {
 	    	display = "Error in load history";
@@ -276,7 +278,7 @@ public final class CalculatorEngine{
 	public void clearHistory(){
 		if(historyList!=null) {
 			historyList.clear();
-			refreshSettingsPanelHistory();
+			SwingUtilities.invokeLater(() -> refreshSettingsPanelHistory());
 		}
 	}
 	
@@ -337,7 +339,7 @@ public final class CalculatorEngine{
 	
 	private void appendNumber(String num) {
 
-		if(display.contains("Error")||display.contains("∞")) {
+		if(display.contains("Error")||display.contains("∞")||display.contains("NaN")) {
 			display = num;
 		    startNewNumber = false;
 		    operator = null;
@@ -352,7 +354,7 @@ public final class CalculatorEngine{
 		    startNewNumber = false;
 		}else {
 			
-			if(display.contains("e")||display.contains("π")||!display.isBlank())return;
+			if( display.contains("e")||display.contains("π") || (!display.isBlank()&&num.equals("e")||num.equals("π") ) )return;
 		    
 			display += num;
 		    display = reformatDisplay(display);
@@ -403,6 +405,7 @@ public final class CalculatorEngine{
 	    	historyUp = historyDown;
 	    	function = null;
 	    }
+	    
 	    historyDown = nf.format(firstNumber) + " " + op;
 	    
 	    if(display.endsWith(".")||display.endsWith(","))display = display.substring(0, display.length() - 1);
@@ -427,6 +430,7 @@ public final class CalculatorEngine{
 	        case "×": result = calculator.multiply(firstNumber, secondNumber); break;
 	        case "÷": result = calculator.divide(firstNumber, secondNumber); break;
 	        case "%": result = calculator.modular(firstNumber, secondNumber); break;
+	        case "^": result = calculatorAdvanced.power(firstNumber, secondNumber); break;
 	    }
 	    
 	    if(function==null) {
@@ -434,7 +438,7 @@ public final class CalculatorEngine{
 	    }else {
 		    historyList.add(new HistoryEntity(firstNumber,secondNumberArgument,result,operator,historyUp,function,Double.isInfinite(result)||Double.isNaN(result)));
 	    }
-	    refreshSettingsPanelHistory();
+	    SwingUtilities.invokeLater(() -> refreshSettingsPanelHistory());
 	    
 	    if(Double.isInfinite(result)|| Double.isNaN(result)) {
 	    	historyUp = historyDown + " " + nf.format(secondNumber) + " = Error";
@@ -442,7 +446,7 @@ public final class CalculatorEngine{
 	    	setErrorState();
 		    return;
 	    }
- 	    
+
 	    historyUp = historyDown + " " + nf.format(secondNumber) + " = "+nf.format(result);
 	    display = nf.format(result);
 	    historyDown = "";
@@ -455,7 +459,7 @@ public final class CalculatorEngine{
 	
 	private void delete() {
 		
-		if (display.contains("Error")) {
+		if (display.contains("Error")||display.contains("∞")||display.contains("NaN")) {
 		    display = "0";
 		    startNewNumber = true;
 		    operator = null;
@@ -475,7 +479,7 @@ public final class CalculatorEngine{
 	    	return;
 	    }
 	    
-	    if((display.length() == 1 || display.equals("-") )||display.equals("Error")) {
+	    if(display.length() == 1 || display.equals("-")) {
 	    	display = "0";
 	        startNewNumber = true;
 	        return;
@@ -525,8 +529,8 @@ public final class CalculatorEngine{
 		double number = getDoubleValueFromDisplay();
 		secondNumberArgument = number;
 	    Double result = executeFunction(func,number);
-		
-		if(result == null) {
+
+	    if(result == null) {
             
 			String functionText = "";
 			functionText = helperFunctionText(func,functionText,number);
@@ -540,7 +544,7 @@ public final class CalculatorEngine{
 				historyList.add(new HistoryEntity(number,0,0,operator,historyUp,function,true));
 	        }
 			
-			refreshSettingsPanelHistory();
+	        SwingUtilities.invokeLater(() -> refreshSettingsPanelHistory());
 			setErrorState();
 
 			return;
@@ -558,9 +562,8 @@ public final class CalculatorEngine{
 		helperHistoryDown(func,number,result);
 		
 		historyList.add(new HistoryEntity(number,0,result,operator,historyUp,function,false));
-		refreshSettingsPanelHistory();
+		SwingUtilities.invokeLater(() -> refreshSettingsPanelHistory());
 	    firstNumber = result; 
-	    
 	}
 
 	
@@ -778,6 +781,12 @@ public final class CalculatorEngine{
 		refreshMainDisplay();
 	}
 	
+	
+	
+	public void addScientificOperator() {
+		setOperator("^");
+		refreshMainDisplay();
+	}
 	
 }
 

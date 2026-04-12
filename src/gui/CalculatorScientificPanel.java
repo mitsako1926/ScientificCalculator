@@ -31,7 +31,7 @@ public final class CalculatorScientificPanel extends JPanel{
 	private final List<JButton> buttonsList = new ArrayList<>();
 	private final CalculatorEngine engine;
 	
-	CalculatorScientificPanel(CalculatorEngine engine){
+	public CalculatorScientificPanel(CalculatorEngine engine){
 		
 		this.engine = engine;
 		
@@ -127,14 +127,15 @@ public final class CalculatorScientificPanel extends JPanel{
 	
 	
 	
+	
 	private void press(String buttonPressed) {
-
-	    if(buttonPressed==null)return;
+	    
+		if(buttonPressed==null)return;
 		
 		switch (buttonPressed) {
-			//mas dinoun number
 	        case "π":
-	            engine.addScientificNumber("π");
+	        	engine.addScientificNumber("π");
+	            
 	            break;
 
 	        case "e":
@@ -144,13 +145,13 @@ public final class CalculatorScientificPanel extends JPanel{
 	        case "rand":
 	            engine.addScientificNumber("rand");
 	            break;
-	        //tha doume  
+
 	        case "x^y":
-	            // engine.setPowerOperator();
+	            engine.addScientificOperator();
 	            break;
 
 	        case "(":
-	            // engine.insertLeftParenthesis();
+	        	// engine.insertLeftParenthesis();
 	            break;
 
 	        case ")":
