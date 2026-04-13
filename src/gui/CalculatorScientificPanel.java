@@ -64,7 +64,9 @@ public final class CalculatorScientificPanel extends JPanel{
 	}
 	
 	
-
+	public void testPress(String buttonPressed) {
+	    press(buttonPressed);
+	}
 	
 	
 	private void customizeLabel(JLabel label) {
@@ -129,7 +131,7 @@ public final class CalculatorScientificPanel extends JPanel{
 	
 	
 	private void press(String buttonPressed) {
-	    
+
 		if(buttonPressed==null)return;
 		
 		switch (buttonPressed) {

@@ -65,7 +65,8 @@ public final class CalculatorShowHistoryPanel extends JPanel{
 	    backButton.addActionListener(e -> {
 	    	cardLayout.show(container, "history");
 	    });
-		
+	    
+	    list.setFont(new Font("Dialog",Font.PLAIN,17));
 	    
 		add(new JScrollPane(list), BorderLayout.CENTER);
 		add(backButton,BorderLayout.NORTH);

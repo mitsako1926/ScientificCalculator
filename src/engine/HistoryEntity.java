@@ -103,6 +103,12 @@ public final class HistoryEntity implements Serializable{
 		    case "1/":
 		        return nf.format(firstNumber) + " " + operator + " 1/(" + nf.format(secondNumber) + ") =";
 	
+		    case "⌈x⌉":
+		    	return nf.format(firstNumber) + " " + operator + " ⌈" + nf.format(secondNumber) + "⌉ =";
+		    
+		    case "⌊x⌋":
+		    	return nf.format(firstNumber) + " " + operator + " ⌊(" + nf.format(secondNumber) + "⌋ =";
+		    
 		    case "ln":
 		        return nf.format(firstNumber) + " " + operator + " ln(" + nf.format(secondNumber) + ") =";
 	
@@ -163,6 +169,12 @@ public final class HistoryEntity implements Serializable{
 		    case "n!":
 		        return nf.format(firstNumber) + "! =";
 	
+		    case "⌈x⌉":
+		    	return  " ⌈" + nf.format(firstNumber) + "⌉ =";
+		    
+		    case "⌊x⌋":
+		    	return " ⌊" + nf.format(firstNumber) + "⌋ =";
+		        
 		    case "ln":
 		        return "ln(" + nf.format(firstNumber) + ") =";
 	

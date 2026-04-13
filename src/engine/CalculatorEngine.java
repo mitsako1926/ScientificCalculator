@@ -54,9 +54,6 @@ public final class CalculatorEngine{
 	
 	private final List<HistoryEntity> historyList = new ArrayList<>();
 	
-//  PROBLEMS:
-//  find more bugs
-//  IMPROVEMENTS:
 	
 	public List<HistoryEntity> getHistoryList(){
 		return new ArrayList<>(historyList);
@@ -127,11 +124,11 @@ public final class CalculatorEngine{
 	
 	public void setTheme() {
 		
-		if (themeListeners != null) 
+		if (themeListeners != null) {
 			for(Consumer<Boolean> listener : themeListeners) {
 				listener.accept(this.dark);
 			} 
-		
+		}
 	}
 	
 
@@ -205,7 +202,7 @@ public final class CalculatorEngine{
 	
 	private String reformatDisplay(String text) {
 	    
-		if (text == null || text.contains("Error") || text.contains("∞")) return "0";
+		if (text == null || text.contains("Error") || text.contains("∞")||text.contains("NaN")|| text.equals("π") || text.equals("e")) return "0";
 		
 		String clean = text.replace(",", "");
 
@@ -365,6 +362,8 @@ public final class CalculatorEngine{
 	
 	private void appendDot() {
 		
+		if(display.contains("e")||display.contains("π"))return;
+		
 		if(startNewNumber) {
 	        display = "0.";
 	        startNewNumber = false;
@@ -392,10 +391,11 @@ public final class CalculatorEngine{
 	
 	
 	private void setOperator(String op) {
-
+		
 		if((operator != null && startNewNumber)||display.contains("Error")) return;
 		
 		if(operator != null && !startNewNumber) calculate();
+		
 
 		firstNumber = getDoubleValueFromDisplay();
 		
@@ -424,6 +424,8 @@ public final class CalculatorEngine{
 	    
 	    double result = 0;
 
+	    if(operator==null)return;
+	    
 	    switch(operator) {
 	        case "+": result = calculator.add(firstNumber, secondNumber); break;
 	        case "-": result = calculator.subtract(firstNumber, secondNumber); break;
@@ -459,7 +461,7 @@ public final class CalculatorEngine{
 	
 	private void delete() {
 		
-		if (display.contains("Error")||display.contains("∞")||display.contains("NaN")) {
+		if (display.contains("Error")||display.contains("∞")||display.contains("NaN")||display.contains("e")||display.contains("π")) {
 		    display = "0";
 		    startNewNumber = true;
 		    operator = null;
@@ -530,7 +532,7 @@ public final class CalculatorEngine{
 		secondNumberArgument = number;
 	    Double result = executeFunction(func,number);
 
-	    if(result == null) {
+	    if(result == null||result.isInfinite()||result.isNaN()) {
             
 			String functionText = "";
 			functionText = helperFunctionText(func,functionText,number);
@@ -649,10 +651,10 @@ public final class CalculatorEngine{
 		        functionText = nf.format(number) + "²";
 		        break;
 		    case "n!":
-		        functionText = "⌈"+nf.format(number) + "⌉";
+		        functionText = nf.format(number) + "!";
 		        break;
 		    case "⌈x⌉":
-		        functionText = nf.format(number) + "";
+		        functionText = "⌈"+nf.format(number) + "⌉";
 		        break;
 		    case "⌊x⌋":
 		        functionText = "⌊"+nf.format(number) + "⌋";
