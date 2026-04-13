@@ -98,6 +98,7 @@ public final class CalculatorGeneralPanel extends JPanel{
 		//SET DECIMAL PRECISION PANEL
 		customizePanel(panelDecimal);
 		customizeComboBox(decimalComboBox);
+		decimalComboBox.setSelectedItem("6");
 
 		comboWrapper.setBackground(Color.GRAY);
 		comboWrapper.add(decimalComboBox);
@@ -191,7 +192,7 @@ public final class CalculatorGeneralPanel extends JPanel{
 	    comboBox.setForeground(Color.BLACK);
 	    comboBox.setFont(new Font("Arial", Font.PLAIN, 14));
 	    comboBox.setPreferredSize(new Dimension(100,30));
-	    comboBox.setSelectedItem("6");
+	    
 	}
 	
 	
@@ -235,13 +236,15 @@ public final class CalculatorGeneralPanel extends JPanel{
 				if(darkRadioButton.isSelected()) engine.setDark(true);
 				else if(lightRadioButton.isSelected())engine.setDark(false);
 				
+				int decimal = Integer.parseInt((String)decimalComboBox.getSelectedItem());
+				engine.setDecimalVar(decimal);
+				
 				engine.setTheme();
 				
 				int value = fontSlider.getValue();
 				engine.setFontSize(value);
 
-				int decimal = Integer.parseInt((String)decimalComboBox.getSelectedItem());
-				engine.setDecimalVar(decimal);
+				
 			}
 		}
 		
