@@ -5,9 +5,11 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FileDialog;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.GridLayout;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -38,7 +40,7 @@ public class CalculatorHistoryPanel extends JPanel{
 	
 	private final CalculatorEngine engine;
 	
-	private final String [] arrayButtons = {"Show History","Clear History","Load History","Save History"};
+	private final String [] arrayButtons = {"Show History","Clear History","Load History","Save History","Save History As Text"};
 	
 	CalculatorHistoryPanel(CalculatorEngine engine){
 
@@ -56,12 +58,14 @@ public class CalculatorHistoryPanel extends JPanel{
 		customizeLabel(labelImportExport);
 
 		customizePanel(panelManageHistory);
+		
 		customizePanel(panelImportExport);
+		
 				
-		panelManageHistoryButtons.setLayout(new GridLayout(1, 2, 20, 0));
+		panelManageHistoryButtons.setLayout(new GridLayout(1, 2, 20, 50));
 		panelManageHistoryButtons.setBackground(Color.GRAY);
 		
-		panelImportExportButtons.setLayout(new GridLayout(1, 2, 20, 0));
+		panelImportExportButtons.setLayout(new FlowLayout(1,10,10));
 		panelImportExportButtons.setBackground(Color.GRAY);
 		
 		
@@ -71,12 +75,13 @@ public class CalculatorHistoryPanel extends JPanel{
 		actions.put("Clear History", () -> press("Clear History"));
 		actions.put("Load History", () -> press("Load History"));
 		actions.put("Save History", () -> press("Save History"));
+		actions.put("Save History As Text", () -> press("Save History As Text"));
 		
 		Arrays.stream(arrayButtons).map(JButton::new).filter((b)->b.getText().contains("Show")||b.getText().contains("Clear"))
 		.forEach(button -> { customizeButton(button,actions); panelManageHistoryButtons.add(button);});
 		
 		Arrays.stream(arrayButtons).map(JButton::new).filter((b)->b.getText().contains("Load")||b.getText().contains("Save"))
-		.forEach(button -> { customizeButton(button,actions); panelImportExportButtons.add(button);});
+		.forEach(button -> { customizeButton(button,actions); button.setPreferredSize(new Dimension(145,60)); panelImportExportButtons.add(button);});
 		
 		panelManageHistory.add(labelManageHistory,BorderLayout.NORTH);
 		panelManageHistory.add(panelManageHistoryButtons,BorderLayout.CENTER);
@@ -98,7 +103,27 @@ public class CalculatorHistoryPanel extends JPanel{
 	private void press(String button){
 	    		
 		switch (button) {
-	        case "Show History":
+	        
+			case "Save History As Text": {
+			    FileDialog dialog = new FileDialog((Frame) null, "Save History As Text", FileDialog.SAVE);
+			    dialog.setVisible(true);
+	
+			    String directory = dialog.getDirectory();
+			    String file = dialog.getFile();
+	
+			    if (file != null && directory != null) {
+	
+			        if (!file.endsWith(".txt")) {
+			            file += ".txt";
+			        }
+	
+			        String path = new File(directory, file).getAbsolutePath();
+			        engine.saveHistoryAsText(path);
+			    }
+			}
+				break;
+				
+			case "Show History":
 	            cardLayout.show(container, "show history");
 	            break;
 	        case "Clear History":
@@ -116,7 +141,9 @@ public class CalculatorHistoryPanel extends JPanel{
 	                engine.loadHistory(path);
 	            }
 	        }
-	            break;
+	            
+	        	break;
+	        
 	        case "Save History":{
 	        	FileDialog dialog = new FileDialog((Frame) null, "Save History", FileDialog.SAVE);
 	            dialog.setVisible(true);
@@ -133,7 +160,9 @@ public class CalculatorHistoryPanel extends JPanel{
 	                engine.saveHistory(path);
 	            }
 	        }
+	        
 	            break;
+	            
 	    }
 	}
 	
@@ -149,7 +178,7 @@ public class CalculatorHistoryPanel extends JPanel{
 	private void customizeLabel(JLabel label) {
 		label.setBackground(Color.GRAY);
 		label.setForeground(Color.WHITE);
-		label.setPreferredSize(new Dimension(250,90));
+		label.setPreferredSize(new Dimension(250,40));
 		label.setFont(new Font("Arial",Font.BOLD,17));
 		label.setOpaque(true);
 		label.setHorizontalAlignment(JLabel.CENTER);
@@ -158,8 +187,8 @@ public class CalculatorHistoryPanel extends JPanel{
 
 	
 	private void customizePanel(JPanel panel) {
-		panel.setLayout(new BorderLayout());
-		panel.setPreferredSize(new Dimension(250,190));
+		panel.setLayout(new BorderLayout(10,10));
+		panel.setPreferredSize(new Dimension(250,230));
 		panel.setBackground(Color.GRAY);
 		panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 	}

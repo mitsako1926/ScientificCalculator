@@ -78,6 +78,14 @@ public final class AdvancedCalculations {
     public double power(double number,double power) {
         return  Math.pow(number,power);
     }
+    
+    public double floor(double number) {
+        return  Math.floor(number);
+    }
+    
+    public double ceiling(double number) {
+        return  Math.ceil(number);
+    }
 	
     public void toggleDegreeMode() {
         isDegreeMode = !isDegreeMode;

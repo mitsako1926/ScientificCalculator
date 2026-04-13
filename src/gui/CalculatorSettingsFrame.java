@@ -28,10 +28,13 @@ public final class CalculatorSettingsFrame extends JFrame{
 		//right panels
 		CalculatorGeneralPanel generalPanel = new CalculatorGeneralPanel(engine);
 		generalPanel.loadSettings();
+		
 		historyPanel = new CalculatorHistoryPanel(engine);
 		historyPanel.setCardLayout(cardLayout, content);
+		
 		showHistoryPanel = new CalculatorShowHistoryPanel(engine);
 		showHistoryPanel.setCardLayout(cardLayout, content);
+		
 		CalculatorScientificPanel scientificPanel = new CalculatorScientificPanel(engine);
 
 		content.add(generalPanel, "general");
@@ -71,6 +74,9 @@ public final class CalculatorSettingsFrame extends JFrame{
 		}else setLocationRelativeTo(null);
 		
 		setVisible(true);
+		
+	    engine.setTheme();
+
 	}
 	
 	public void refreshHistory() {

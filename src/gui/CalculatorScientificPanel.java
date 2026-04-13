@@ -22,8 +22,8 @@ public final class CalculatorScientificPanel extends JPanel{
 	private final JLabel labelScientific = new JLabel("Scientific");
 	private final JPanel panelButtons = new JPanel();
 	
-	private final String[] buttons = {  "π", "e","n!", "x^y","rand",
-		    							"ln", "log", "10^x","(",")",
+	private final String[] buttons = {  "π", "e","n!", "x^y","random",
+		    							"ln", "log", "10^x","⌈x⌉","⌊x⌋",
 		    							"abs","sin", "cos", "tan", "cot",
 		    							"deg","asin", "acos", "atan", "acot"
 									 };
@@ -82,7 +82,7 @@ public final class CalculatorScientificPanel extends JPanel{
 		button.setFocusable(false);
 	    button.setBackground(Color.GRAY);
 	    button.setForeground(Color.WHITE);
-	    button.setFont(new Font("Arial", Font.PLAIN, 15));
+	    button.setFont(new Font("Dialog", Font.PLAIN, 15));
 		button.setPreferredSize(new Dimension(100,50));
 	    button.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 2, true));
 	    button.addActionListener(e->press(button.getText()));
@@ -142,20 +142,20 @@ public final class CalculatorScientificPanel extends JPanel{
 	            engine.addScientificNumber("e");
 	            break;
 
-	        case "rand":
-	            engine.addScientificNumber("rand");
+	        case "random":
+	            engine.addScientificNumber("random");
 	            break;
 
 	        case "x^y":
 	            engine.addScientificOperator();
 	            break;
 
-	        case "(":
-	        	// engine.insertLeftParenthesis();
+	        case "⌈x⌉":
+	        	engine.scientificFunctionPressed("⌈x⌉");
 	            break;
 
-	        case ")":
-	            // engine.insertRightParenthesis();
+	        case "⌊x⌋":
+	            engine.scientificFunctionPressed("⌊x⌋");
 	            break;
 
 	        case "deg":

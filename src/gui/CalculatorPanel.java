@@ -66,7 +66,7 @@ public final class CalculatorPanel extends JPanel{
 		//COMPONENTS OF THE DISPLAY OF CALCULATIONS
 		textDisplay = new JTextField();
 		textDisplay.setPreferredSize(new Dimension(400,150));
-		textDisplay.setFont(new Font("Arial", Font.BOLD, 35));
+		textDisplay.setFont(new Font("Dialog", Font.BOLD, 35));
 		textDisplay.setText("0");
 		textDisplay.setHorizontalAlignment(JTextField.RIGHT);
 		textDisplay.setBackground(Color.GRAY);
@@ -83,6 +83,7 @@ public final class CalculatorPanel extends JPanel{
 		historyLabelUp.setOpaque(true);
 		historyLabelUp.setForeground(Color.WHITE);
 		historyLabelUp.setHorizontalAlignment(JLabel.RIGHT);
+		historyLabelUp.setFont(new Font("Dialog", Font.BOLD, 13));
 		
 		baseFontSizeHistoryUp = historyLabelUp.getFont().getSize2D();
 		
@@ -92,7 +93,7 @@ public final class CalculatorPanel extends JPanel{
 		historyLabelDown.setOpaque(true);
 		historyLabelDown.setForeground(Color.WHITE);
 		historyLabelDown.setHorizontalAlignment(JLabel.RIGHT);
-		historyLabelDown.setFont(new Font("Arial", Font.BOLD, 15));
+		historyLabelDown.setFont(new Font("Dialog", Font.BOLD, 15));
 		
 		baseFontSizeHistoryDown = historyLabelDown.getFont().getSize2D();
 		

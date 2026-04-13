@@ -137,6 +137,8 @@ public final class CalculatorGeneralPanel extends JPanel{
 			if(isDark) changeToDark();
 			else changeToLight();
 		});
+		
+		
 	}
 	
 	
@@ -147,7 +149,7 @@ public final class CalculatorGeneralPanel extends JPanel{
 
 	    if (engine.getDark())darkRadioButton.setSelected(true);
 	    else lightRadioButton.setSelected(true);
-	    
+	    	    
 	}
 
 
@@ -209,9 +211,6 @@ public final class CalculatorGeneralPanel extends JPanel{
 	    button.addActionListener(new myActionListener());
 	}
 	
-
-//PROBLEMS: 
-//IMPROVEMENTS: FIND BUGS, IMPROVE READABILITY
 
 
 

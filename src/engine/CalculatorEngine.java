@@ -162,7 +162,7 @@ public final class CalculatorEngine{
 	}
 	
 	
-	//FUTURE FEATURE
+
 	public void saveHistoryAsText(String filePath) {
 	    try (PrintWriter writer = new PrintWriter(new FileWriter(filePath))) {
 	        for (HistoryEntity entry : historyList.reversed()) {
@@ -590,6 +590,12 @@ public final class CalculatorEngine{
 		    case "n!":
 		        historyDown = nf.format(number) + "! = " + nf.format(result);
 		        break;
+		    case "⌈x⌉":
+		        historyDown = "⌈"+nf.format(number) + "⌉ = " + nf.format(result);
+		        break;
+		    case "⌊x⌋":
+		        historyDown = "⌊"+nf.format(number) + "⌋ = " + nf.format(result);
+		        break;
 		    case "ln":
 		        historyDown = "ln(" + nf.format(number) + ") = " + nf.format(result);
 		        break;
@@ -643,7 +649,13 @@ public final class CalculatorEngine{
 		        functionText = nf.format(number) + "²";
 		        break;
 		    case "n!":
-		        functionText = nf.format(number) + "!";
+		        functionText = "⌈"+nf.format(number) + "⌉";
+		        break;
+		    case "⌈x⌉":
+		        functionText = nf.format(number) + "";
+		        break;
+		    case "⌊x⌋":
+		        functionText = "⌊"+nf.format(number) + "⌋";
 		        break;
 		    case "ln":
 		        functionText = "ln(" + nf.format(number) + ")";
@@ -702,7 +714,11 @@ public final class CalculatorEngine{
 			 	return calculator.divideByNumber(number);
 			case "n!":
 			    if (number < 0 || number != Math.floor(number)) return null;
-			    return calculatorAdvanced.factorial(number);   
+			    return calculatorAdvanced.factorial(number);
+			case "⌈x⌉":
+			    return calculatorAdvanced.ceiling(number);
+			case "⌊x⌋":
+			    return calculatorAdvanced.floor(number);
 			case "ln":
 			    if (number <= 0) return null;
 			    return calculatorAdvanced.ln(number);
@@ -772,9 +788,10 @@ public final class CalculatorEngine{
 	
 	
 	public void addScientificNumber(String number) {
-		if(number=="rand") {
+		if(number.equals("random")) {
 			String random = nf.format(calculatorAdvanced.random());
 			appendNumber(random);
+			refreshMainDisplay();
 			return;
 		}
 		appendNumber(number);
