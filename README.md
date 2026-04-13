@@ -1,88 +1,168 @@
-# Scientific Calculator Application 
+# 🧮 Scientific Calculator Application
 
 ## 📌 Overview
 
-This project is a fully functional calculator application developed in Java.
-It supports both integer and decimal calculations, provides a clean formatted display, and includes a two-level history system for better user experience.
+This project is a fully functional **Scientific Calculator** built in Java using Swing.  
+It provides accurate numerical calculations, a structured calculation engine, and a user-friendly graphical interface with customizable settings.
 
-This is my **first GUI-based project**, focusing on building a structured calculation engine and handling real-world edge cases in numeric input and formatting.
+This is my **first GUI-based project**, focused on clean architecture, separation of concerns, and handling real-world edge cases in numeric input and formatting.
 
 ---
 
 ## 🚀 Features
 
-### 🔢 Number Handling
+### 🔢 Advanced Number Handling
 
-* Supports **integers and decimal numbers**
-* Proper handling of **leading zeros and decimal input**
-* Prevents invalid inputs (e.g. multiple decimal points)
+- Supports **integers and decimal numbers**
+- Maintains clean and consistent output format
+- Prevents invalid input
+- Handles edge cases
+- Allows continued calculations using previous result
 
 ---
 
 ### 📜 Two-Level History System
 
-The calculator keeps track of operations in **two stages**:
+The calculator tracks operations in **two stages** for better clarity:
 
-Example:
 
-```
 5 × 3 = 15
+
 15 × 6 = 90
-```
 
-* The **previous operation** is shown on top
-* The **current operation** is shown below
-* The **final result** is displayed in the main screen
 
-This provides a clearer view of chained calculations.
+- Previous operation displayed on top
+- Current operation displayed below
+- Final result shown on the main screen
 
 ---
 
-### 🧠 Calculation Engine
+### 🔍 Extended History Features
 
-* Handles:
-
-  * Input parsing
-  * Operator chaining
-  * State management
-  * Error handling (division by zero, invalid operations)
+- View the **full calculation history** through a dedicated "Show History" option
+- Select any previous calculation to **reload it into the calculator**
+- Option to **save history** or **load history**
+- Option to **export history as a text file**
+- Option to **clear history** completely
 
 ---
 
+### 🎛️ Settings
+
+The application includes a **settings panel** where users can:
+
+- Adjust **font size**
+- Change **decimal precision**
+- Switch between **Light Mode ☀️ and Dark Mode 🌙 (default)** 
+- Reset settings to default or apply the changes made
+
+---
+
+### 🔬 Scientific Operations
+
+The calculator includes support for basic scientific operations, such as:
+
+- Trigonometric functions (sin, cos, tan)
+- Logarithmic functions (log, ln)
+- Power and exponentiation
+
+---
 
 ## 🖥️ Technologies Used
 
-* **Java**
-* **Java Swing** (for GUI)
-* **Git, GitHub, Eclipse IDE** (for Tools) 
+- **Java**
+- **Java Swing (AWT/Swing GUI)**
+- **Eclipse IDE**
+- **Git, GitHub, Visual Paradigm**
 
 ---
 
+## 🏗️ Project Structure
+
+The project is organized into separate components:
+
+- **UI Layer (Swing)** – handles the graphical interface
+- **Logic Layer (Calculator Engine)** – manages application state and behavior
+- **Calculation Module** – performs all mathematical operations
+
+---
 
 ## 🎯 What I Learned
 
-* Handling numeric precision issues (`double`)
-* Formatting numbers for user-friendly display
-* Managing application state in a calculator
-* Designing a clean separation between **logic and UI**
-* Implementing a responsive GUI application
+- Handling **state in interactive applications**
+- Implementing **theme switching and UI customization**
+- Understanding how to structure a multi-class Java application
+- Working with event-driven programming
+- Handling edge cases in real-world scenarios
+- Debugging complex application behavior
+- Writing clean and readable code
 
 ---
 
 ## 🛠️ Future Improvements
 
-* Scientific notation support
-* Memory functions (M+, M-, MR)
-* Keyboard input support
+- Keyboard input support
+- Support for parentheses in expressions
 
 ---
 
+## 💾 Installation
+
+Follow these steps to clone and run the calculator locally. This guide works for Linux, macOS, and Windows (via Git Bash or WSL).
+
+### 1. Clone the repository
+
+Make sure you have Git installed. Open your terminal or command prompt and run:
+
+```bash
+git clone https://github.com/mitsako1926/ScientificCalculator.git
+
+cd Calculator
+```
+
+---
+
+### 2. Open the project
+
+You can open the project in:
+
+- IntelliJ IDEA (recommended)
+- Eclipse
+- or any Java IDE
+
+Make sure the `src` folder is marked as the source root if required by your IDE.
+
+---
+
+### 3. Run the application
+
+#### Using an IDE:
+
+Navigate to:
+
+```bash
+src/engine/Main.java
+```
+
+and run the `Main` class.
+
+---
+
+#### Using the terminal:
+
+```bash
+cd src
+javac engine/Main.java
+java engine.Main
+```
+---
 ## 🤝 Contributing
-Feel free to fork the project, improve it, and submit a pull request.
-Contributions like bug fixes, code improvements, or new features are always welcome.
+
+Feel free to fork the project and submit improvements.  
+Contributions such as bug fixes, optimizations, or new features are welcome.
 
 ---
 
 ## 📜 License
-Licensed under the MIT License. Check the LICENSE file for details.
 
+This project is licensed under the **MIT License**.
