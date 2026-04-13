@@ -1,7 +1,5 @@
 package engine;
 
-
-
 import gui.CalculatorFrame;
 
 public class Main {

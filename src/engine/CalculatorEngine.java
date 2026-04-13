@@ -275,6 +275,8 @@ public final class CalculatorEngine{
 	public void clearHistory(){
 		if(historyList!=null) {
 			historyList.clear();
+			historyUp = "";
+			refreshMainDisplay();
 			SwingUtilities.invokeLater(() -> refreshSettingsPanelHistory());
 		}
 	}
