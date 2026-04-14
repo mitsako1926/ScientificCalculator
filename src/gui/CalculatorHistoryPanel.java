@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -49,6 +50,7 @@ public class CalculatorHistoryPanel extends JPanel{
 		setPreferredSize(new Dimension(250,450));
 		setLayout(new BorderLayout());
 		
+		//LABELS
 		customizeLabel(labelHistory);
 		labelHistory.setFont(new Font("Arial",Font.BOLD,20));
 		labelHistory.setPreferredSize(new Dimension(250,70));
@@ -61,14 +63,14 @@ public class CalculatorHistoryPanel extends JPanel{
 		
 		customizePanel(panelImportExport);
 		
-				
+		//PANELS TO ONLY HOLD THE BUTTONS		
 		panelManageHistoryButtons.setLayout(new GridLayout(1, 2, 20, 50));
 		panelManageHistoryButtons.setBackground(Color.GRAY);
 		
 		panelImportExportButtons.setLayout(new FlowLayout(1,10,10));
 		panelImportExportButtons.setBackground(Color.GRAY);
 		
-		
+		//BUTTONS
 		Map<String, Runnable> actions = new HashMap<>();
 
 		actions.put("Show History", () -> press("Show History"));
@@ -83,15 +85,18 @@ public class CalculatorHistoryPanel extends JPanel{
 		Arrays.stream(arrayButtons).map(JButton::new).filter((b)->b.getText().contains("Load")||b.getText().contains("Save"))
 		.forEach(button -> { customizeButton(button,actions); button.setPreferredSize(new Dimension(145,60)); panelImportExportButtons.add(button);});
 		
+		//ADDING EVERYTHING TO THE TWO MAIN PANELS
 		panelManageHistory.add(labelManageHistory,BorderLayout.NORTH);
 		panelManageHistory.add(panelManageHistoryButtons,BorderLayout.CENTER);
 		
 		panelImportExport.add(labelImportExport,BorderLayout.NORTH);
 		panelImportExport.add(panelImportExportButtons,BorderLayout.CENTER);
 		
+		//ADDING THE TWO MAIN PANELS AND LABEL 
 		add(labelHistory,BorderLayout.NORTH);
 		add(panelManageHistory,BorderLayout.CENTER);
 		add(panelImportExport,BorderLayout.SOUTH);
+		
 		
 		engine.setThemeListener(isDark->{
 			if(isDark) changeToDark();
@@ -100,6 +105,7 @@ public class CalculatorHistoryPanel extends JPanel{
 	}
 	
 	
+	//METHOD EXECUTED WHEN PRESSED
 	private void press(String button){
 	    		
 		switch (button) {
@@ -126,9 +132,11 @@ public class CalculatorHistoryPanel extends JPanel{
 			case "Show History":
 	            cardLayout.show(container, "show history");
 	            break;
+	            
 	        case "Clear History":
 	            engine.clearHistory();
 	            break;
+	            
 	        case "Load History":{
 	        	FileDialog dialog = new FileDialog((Frame) null, "Load History", FileDialog.LOAD);
 	            dialog.setVisible(true);
@@ -140,8 +148,8 @@ public class CalculatorHistoryPanel extends JPanel{
 	                String path = directory + file;
 	                engine.loadHistory(path);
 	            }
-	        }
 	            
+	        }
 	        	break;
 	        
 	        case "Save History":{
@@ -159,11 +167,13 @@ public class CalculatorHistoryPanel extends JPanel{
 	            	String path = directory + file;
 	                engine.saveHistory(path);
 	            }
+	            
 	        }
-	        
 	            break;
 	            
 	    }
+		
+		
 	}
 	
 	
@@ -234,26 +244,28 @@ public class CalculatorHistoryPanel extends JPanel{
 	
 	
 	private void changeToLight() {
-		labelHistory.setBackground(Color.WHITE);
-		labelHistory.setForeground(Color.DARK_GRAY);
-		
-		labelManageHistory.setBackground(Color.WHITE);
-		labelManageHistory.setForeground(Color.DARK_GRAY);
-		
-		labelImportExport.setBackground(Color.WHITE);
-		labelImportExport.setForeground(Color.DARK_GRAY);
-		
-		panelImportExport.setBackground(Color.WHITE);
-		panelManageHistory.setBackground(Color.WHITE);
-		
-		panelManageHistoryButtons.setBackground(Color.WHITE);
-		panelImportExportButtons.setBackground(Color.WHITE);
+
+		styleComponent(labelHistory);
+		styleComponent(labelManageHistory);
+		styleComponent(labelImportExport);
+		styleComponent(panelImportExport);
+		styleComponent(panelManageHistory);
+		styleComponent(panelManageHistoryButtons);
+		styleComponent(panelImportExportButtons);
 		
 		buttonsList.forEach((button)->{
 			button.setForeground(Color.DARK_GRAY);
 			button.setBackground(Color.WHITE);
 			button.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2, true));
 		});
+		
+	}
+	
+	
+	
+	private void styleComponent(JComponent comp) {
+	    comp.setBackground(Color.WHITE);
+	    comp.setForeground(Color.DARK_GRAY);
 	}
 	
 	

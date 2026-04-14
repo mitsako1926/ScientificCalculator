@@ -10,9 +10,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -22,9 +22,9 @@ import engine.CalculatorEngine;
 public final class CalculatorPanel extends JPanel{
 	
 	private final JTextField textDisplay;
+	
 	private final JLabel historyLabelUp,historyLabelDown;
-	private final JPanel panelDisplay;
-	private final JPanel panelButtons;
+	private final JPanel panelDisplay,panelButtons;
 	
 	private List<JButton> buttonList = new ArrayList<>();
 		
@@ -60,46 +60,33 @@ public final class CalculatorPanel extends JPanel{
 		panelButtons.setLayout(new GridLayout(6,4,4,4));
 		panelButtons.setBackground(Color.BLACK);
 		
+		
 		//COMPONENTS OF THE DISPLAY OF CALCULATIONS
 		textDisplay = new JTextField();
-		textDisplay.setPreferredSize(new Dimension(400,150));
-		textDisplay.setFont(new Font("Dialog", Font.BOLD, 35));
-		textDisplay.setText("0");
-		textDisplay.setHorizontalAlignment(JTextField.RIGHT);
-		textDisplay.setBackground(Color.GRAY);
-		textDisplay.setForeground(Color.WHITE);
-		textDisplay.setBorder(null);
-		textDisplay.setEditable(false);//key binds are going to be supported in the future
-		textDisplay.setFocusable(false);
+		customizeTextField(textDisplay);
 		
 		baseFontSize = textDisplay.getFont().getSize2D();
 		
 		historyLabelUp = new JLabel();
-		historyLabelUp.setPreferredSize(new Dimension(400,50));
-		historyLabelUp.setBackground(Color.GRAY);
-		historyLabelUp.setOpaque(true);
-		historyLabelUp.setForeground(Color.WHITE);
-		historyLabelUp.setHorizontalAlignment(JLabel.RIGHT);
-		historyLabelUp.setFont(new Font("Dialog", Font.BOLD, 13));
+		customizeLabel(historyLabelUp);
 		
 		baseFontSizeHistoryUp = historyLabelUp.getFont().getSize2D();
 		
 		historyLabelDown = new JLabel();
-		historyLabelDown.setPreferredSize(new Dimension(400,50));
-		historyLabelDown.setBackground(Color.GRAY);
-		historyLabelDown.setOpaque(true);
-		historyLabelDown.setForeground(Color.WHITE);
-		historyLabelDown.setHorizontalAlignment(JLabel.RIGHT);
-		historyLabelDown.setFont(new Font("Dialog", Font.BOLD, 15));
+		customizeLabel(historyLabelDown);
 		
 		baseFontSizeHistoryDown = historyLabelDown.getFont().getSize2D();
+		
 		
 		//WE ADD THE COMPONENTS TO THE DISPLAY OF CALCULATIONS
 		panelDisplay.add(historyLabelUp,BorderLayout.NORTH);
 		panelDisplay.add(historyLabelDown,BorderLayout.CENTER);
 		panelDisplay.add(textDisplay,BorderLayout.SOUTH);
 		
+		
+		//FOR REFREASHING THE WHOLE PANEL
 		engine.setDisplayRefreshListener(this::refreshView);
+		
 		
 		//COMPONENTS OF THE DISPLAY OF BUTTONS
 		
@@ -136,6 +123,8 @@ public final class CalculatorPanel extends JPanel{
 		add(panelDisplay,BorderLayout.NORTH);
 		add(panelButtons,BorderLayout.SOUTH);
 		
+		
+		//FOR THE FONT CHANGE
 		engine.setFontListener(offset -> {
 			    float newSize = baseFontSize + offset;
 			    textDisplay.setFont(textDisplay.getFont().deriveFont(newSize));
@@ -150,16 +139,16 @@ public final class CalculatorPanel extends JPanel{
 			    
 		});
 		
+		
+		//FOR THE THEME CHANGE
 		engine.setThemeListener(isDark -> {
+			
 			if(isDark) {
-				historyLabelDown.setBackground(Color.GRAY);
-				historyLabelDown.setForeground(Color.WHITE);
 				
-				historyLabelUp.setBackground(Color.GRAY);
-				historyLabelUp.setForeground(Color.WHITE);
-				
-				textDisplay.setBackground(Color.GRAY);
-				textDisplay.setForeground(Color.WHITE);
+				styleComponentDark(historyLabelDown);
+				styleComponentDark(historyLabelUp);
+				styleComponentDark(textDisplay);
+				panelButtons.setBackground(Color.black);
 				
 				buttonList.forEach((button)->{
 					button.setBackground(Color.GRAY);
@@ -168,31 +157,67 @@ public final class CalculatorPanel extends JPanel{
 				    
 				});
 				
-				panelButtons.setBackground(Color.BLACK);
 
 			}else {
-				historyLabelDown.setBackground(Color.WHITE);
-				historyLabelDown.setForeground(Color.DARK_GRAY);
 				
-				historyLabelUp.setBackground(Color.WHITE);
-				historyLabelUp.setForeground(Color.DARK_GRAY);
-				
-				textDisplay.setBackground(Color.WHITE);
-				textDisplay.setForeground(Color.DARK_GRAY);
-				
+				styleComponentLight(historyLabelDown);
+				styleComponentLight(historyLabelUp);
+				styleComponentLight(textDisplay);
+				styleComponentLight(panelButtons);
+								
 				buttonList.forEach((button)->{
 					button.setBackground(Color.WHITE);
 				    button.setForeground(Color.DARK_GRAY);
 				    button.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2, true));
 				});
-				
-				panelButtons.setBackground(Color.WHITE);
-				
+								
 			}
 			
 		});
 		
+		
 	}
+	
+	
+	
+	private void styleComponentDark(JComponent comp) {
+	    comp.setBackground(Color.GRAY);
+	    comp.setForeground(Color.WHITE);
+	}
+	
+	
+	
+	private void styleComponentLight(JComponent comp) {
+	    comp.setBackground(Color.WHITE);
+	    comp.setForeground(Color.DARK_GRAY);
+	}
+	
+	
+	
+	private void customizeLabel(JLabel label) {
+		label.setPreferredSize(new Dimension(400,50));
+		label.setBackground(Color.GRAY);
+		label.setOpaque(true);
+		label.setForeground(Color.WHITE);
+		label.setHorizontalAlignment(JLabel.RIGHT);
+		label.setFont(new Font("Dialog", Font.BOLD, 13));
+	}
+	
+	
+	
+	private void customizeTextField(JTextField textField) {
+		textField.setPreferredSize(new Dimension(400,150));
+		textField.setFont(new Font("Dialog", Font.BOLD, 35));
+		textField.setText("0");
+		textField.setHorizontalAlignment(JTextField.RIGHT);
+		textField.setBackground(Color.GRAY);
+		textField.setForeground(Color.WHITE);
+		textField.setBorder(null);
+		textField.setEditable(false);//KEY BINDS WILL BE AVAILABLE IN A FUTURE VERSION
+		textField.setFocusable(false);
+	}
+	
+	
 	
 	private void customizeButton(JButton button,Map<String,Runnable> actions) {
 		button.setFocusable(false);
@@ -205,6 +230,8 @@ public final class CalculatorPanel extends JPanel{
 	    buttonList.add(button);
 	}	
 	
+	
+	
 	private void press(String buttonPressed){
 	    
 	    engine.press(buttonPressed);
@@ -215,12 +242,12 @@ public final class CalculatorPanel extends JPanel{
 	}
 	
 	
+	
 	private void refreshView() {
 	    textDisplay.setText(engine.getDisplay());
 	    historyLabelDown.setText(engine.getHistoryDown());
 	    historyLabelUp.setText(engine.getHistoryUp());
 	}
-	
 	
 
 	

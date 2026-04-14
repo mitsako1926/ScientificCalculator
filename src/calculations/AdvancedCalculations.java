@@ -2,6 +2,7 @@ package calculations;
 
 public final class AdvancedCalculations {
 
+	
 	private boolean isDegreeMode = true;
 
 	
@@ -9,6 +10,7 @@ public final class AdvancedCalculations {
 		
 		int n = (int) x;
         double result = 1;
+        
         for (int i = 1; i <= n; i++) {
             result *= i;
         }
@@ -94,4 +96,6 @@ public final class AdvancedCalculations {
     public boolean isDegreeMode() {
         return isDegreeMode;
     }
+    
+    
 }

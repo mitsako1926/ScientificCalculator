@@ -2,7 +2,6 @@ package gui;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
-
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
@@ -27,6 +26,7 @@ public final class CalculatorFrame extends JFrame{
 		int x = 0;
 		int y = (screenSize.height - getHeight()) / 2;
 		setLocation(x, y);
+		
 		setVisible(true);
 	}
 	

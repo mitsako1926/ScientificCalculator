@@ -6,6 +6,8 @@ import java.util.Locale;
 
 public final class HistoryEntity implements Serializable{
 
+	private static final long serialVersionUID = 1L;
+	
 	private final NumberFormat nf =  NumberFormat.getInstance(Locale.US);
 	
 	{	
@@ -23,7 +25,6 @@ public final class HistoryEntity implements Serializable{
 	
 	private final boolean error;
 
-	private static final long serialVersionUID = 1L;
 	
 	HistoryEntity(double firstNumber,double secondNumber,double result,String operator,String historyUp, String function, boolean error){
 		this.firstNumber = firstNumber;
@@ -38,22 +39,18 @@ public final class HistoryEntity implements Serializable{
 	
 	public double getFirstNumber() {
 		return firstNumber;
-		
 	}
 	
 	public double getSecondNumber() {
 		return secondNumber;
-		
 	}
 	
 	public String getOperator() {
 		return operator;
-		
 	}
 	
 	public double getResult() {
 		return result;
-		
 	}
 	
 	public String getHistoryDown() {
@@ -70,12 +67,10 @@ public final class HistoryEntity implements Serializable{
 
 	public String getHistoryUp() {
 		return historyUp;
-		
 	}
 	
 	public String getFunction() {
 		return function;
-		
 	}
 	
 	public boolean isError() {
@@ -85,6 +80,7 @@ public final class HistoryEntity implements Serializable{
 	public String toString() {
 		return getHistoryDown() + " " + (error ? "Error" : nf.format(result));
 	}
+	
 	
 	
 	private String textFunctionWithOperator() {
@@ -148,8 +144,8 @@ public final class HistoryEntity implements Serializable{
 		    default:
 		        return nf.format(firstNumber) + " " + operator + " " + function + nf.format(secondNumber) + " =";
 		}
+		
 	}
-	
 	
 	
 	
@@ -214,7 +210,9 @@ public final class HistoryEntity implements Serializable{
 		    default:
 		        return function + nf.format(firstNumber) + " =";
 		}
+		
 	}
+	
 	
 	
 }

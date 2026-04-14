@@ -8,11 +8,11 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -39,11 +39,13 @@ public final class CalculatorGeneralPanel extends JPanel{
 	private final JPanel comboWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 15));
 	
 	private final JSlider fontSlider = new JSlider(0, 10, 5);
+	
 	private final JComboBox<String> decimalComboBox = new JComboBox<>(
 	                            new String[]{"2", "4", "6", "8", "10"} );
 	
 	private final JRadioButton darkRadioButton = new JRadioButton("Dark");
 	private final JRadioButton lightRadioButton = new JRadioButton("Light");
+	
 	private final ButtonGroup themeGroup = new ButtonGroup();
 	
 		
@@ -129,7 +131,7 @@ public final class CalculatorGeneralPanel extends JPanel{
 		panelSettings.add(panelDecimal);
 		panelSettings.add(panelTheme);
 		
-		
+		//ADD THE TWO MAIN PANELS AND THE LABEL
 		add(labelGeneral,BorderLayout.NORTH);
 		add(panelSettings,BorderLayout.CENTER);
 		add(panelButtons,BorderLayout.SOUTH);
@@ -165,6 +167,7 @@ public final class CalculatorGeneralPanel extends JPanel{
 	}
 	
 	
+	
 	private void customizeRadioButton(JRadioButton radioButton) {
 		radioButton.setHorizontalAlignment(JLabel.CENTER);
 		radioButton.setBackground(Color.GRAY);
@@ -172,6 +175,7 @@ public final class CalculatorGeneralPanel extends JPanel{
 		radioButton.setFont(new Font("Arial", Font.PLAIN, 14));
 		radioButton.setForeground(Color.WHITE);
 	}
+	
 	
 	
 	private void customizeSlider(JSlider slider) {
@@ -182,9 +186,9 @@ public final class CalculatorGeneralPanel extends JPanel{
 	    slider.setMinorTickSpacing(1);
 	    slider.setPaintTicks(true);
 	    slider.setPaintLabels(true);
-	    
 	}
 
+	
 	
 	private void customizeComboBox(JComboBox<String> comboBox) {
 	    comboBox.setFocusable(false);
@@ -192,14 +196,15 @@ public final class CalculatorGeneralPanel extends JPanel{
 	    comboBox.setForeground(Color.BLACK);
 	    comboBox.setFont(new Font("Arial", Font.PLAIN, 14));
 	    comboBox.setPreferredSize(new Dimension(100,30));
-	    
 	}
+	
 	
 	
 	private void customizePanel(JPanel panel) {
 		panel.setLayout(new BorderLayout(5,5));
 		panel.setBackground(Color.GRAY);
 	}
+	
 	
 	
 	private void customizeButton(JButton button){
@@ -244,9 +249,10 @@ public final class CalculatorGeneralPanel extends JPanel{
 				int value = fontSlider.getValue();
 				engine.setFontSize(value);
 
-				
 			}
+			
 		}
+		
 		
 	}
 	
@@ -289,53 +295,55 @@ public final class CalculatorGeneralPanel extends JPanel{
 	}
 	
 	
+	
 	private void changeToLight() {
 		//LABELS
-		labelGeneral.setBackground(Color.WHITE);
-		labelGeneral.setForeground(Color.DARK_GRAY);
-		
-		labelFont.setBackground(Color.WHITE);
-		labelFont.setForeground(Color.DARK_GRAY);
-		
-		labelDecimal.setBackground(Color.WHITE);
-		labelDecimal.setForeground(Color.DARK_GRAY);
-		
-		labelTheme.setBackground(Color.WHITE);
-		labelTheme.setForeground(Color.DARK_GRAY);
+		styleComponentLight(labelGeneral);
+	    styleComponentLight(labelFont);
+	    styleComponentLight(labelDecimal);
+	    styleComponentLight(labelTheme);
 		
 		//BUTTONS
-		applyButton.setBackground(Color.WHITE);
-		applyButton.setForeground(Color.DARK_GRAY);
-		applyButton.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2, true));
-		
-		resetButton.setBackground(Color.WHITE);
-		resetButton.setForeground(Color.DARK_GRAY);
-		resetButton.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2, true));
+	    styleButton(applyButton);
+	    styleButton(resetButton);
 	    
 		//PANELS
-		panelButtons.setBackground(Color.WHITE);
-		panelSettings.setBackground(Color.WHITE);
-		panelFont.setBackground(Color.WHITE);
-		panelDecimal.setBackground(Color.WHITE);
-		panelTheme.setBackground(Color.WHITE);
-		comboWrapper.setBackground(Color.WHITE);
+	    styleComponentLight(panelButtons);
+	    styleComponentLight(panelSettings);
+	    styleComponentLight(panelFont);
+	    styleComponentLight(panelDecimal);
+	    styleComponentLight(panelTheme);
+	    styleComponentLight(comboWrapper);
 		
 		//RADIO BUTTONS
-		darkRadioButton.setForeground(Color.DARK_GRAY);
-		darkRadioButton.setBackground(Color.WHITE);
-		
-		lightRadioButton.setForeground(Color.DARK_GRAY);
-		lightRadioButton.setBackground(Color.WHITE);
+	    styleComponentLight(darkRadioButton);
+	    styleComponentLight(lightRadioButton);
 		lightRadioButton.setSelected(true);
 		
 		//SLIDER
-		fontSlider.setBackground(Color.WHITE);
-		fontSlider.setForeground(Color.DARK_GRAY);
+		styleComponentLight(fontSlider);
 	    
 		//COMBOBOX
-		decimalComboBox.setBackground(Color.WHITE);
-	    decimalComboBox.setForeground(Color.DARK_GRAY);
+		styleComponentLight(decimalComboBox);
 	}
+	
+	
+	
+	private void styleComponentLight(JComponent comp) {
+	    comp.setBackground(Color.WHITE);
+	    comp.setForeground(Color.DARK_GRAY);
+	}
+	
+	
+	
+	private void styleButton(JButton button) {
+	    button.setBackground(Color.WHITE);
+	    button.setForeground(Color.DARK_GRAY);
+	    button.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2, true));
+	}
+	
+	
+	
 	
 }
 

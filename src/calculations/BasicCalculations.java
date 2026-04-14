@@ -34,8 +34,6 @@ public final class BasicCalculations {
 	
 	public double divideByNumber(double number){
 		return 1/number;
-		
-
 	}
 	
 }

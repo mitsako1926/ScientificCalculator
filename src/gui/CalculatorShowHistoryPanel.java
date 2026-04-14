@@ -8,7 +8,6 @@ import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
-
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -22,13 +21,19 @@ import engine.HistoryEntity;
 
 public final class CalculatorShowHistoryPanel extends JPanel{
 
+	
 	private CardLayout cardLayout;
 	private JPanel container;
+	
 	private final CalculatorEngine engine;
-    private final DefaultListModel<HistoryEntity> model;
-    private final JList<HistoryEntity> list;
-    JButton backButton = new JButton("Back");
     
+	private final DefaultListModel<HistoryEntity> model;
+    
+	private final JList<HistoryEntity> list;
+    
+	JButton backButton = new JButton("Back");
+    
+	
 	CalculatorShowHistoryPanel(CalculatorEngine engine){
 		
 		this.engine = engine;
@@ -36,14 +41,16 @@ public final class CalculatorShowHistoryPanel extends JPanel{
 		setPreferredSize(new Dimension(350,450));
 		setLayout(new BorderLayout());
 		
-		model = new DefaultListModel<>();
+		model = new DefaultListModel<HistoryEntity>();
 		
-		list = new JList<>(model);
+		
+		//CUSTOMIZE LIST
+		list = new JList<HistoryEntity>(model);
 		list.setFont(new Font("Arial", Font.PLAIN, 18));
 		list.setBackground(Color.GRAY);
 		list.setForeground(Color.WHITE);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
+		list.setFont(new Font("Dialog",Font.PLAIN,17));
 		list.addMouseListener(new MouseAdapter() {
 		    @Override
 		    public void mouseClicked(MouseEvent e) {
@@ -56,6 +63,8 @@ public final class CalculatorShowHistoryPanel extends JPanel{
 		    }
 		});
 		
+		
+		//CUSTOMIZE BUTTON
 		backButton.setPreferredSize(new Dimension(350,35));
 		backButton.setFocusable(false);
 		backButton.setBackground(Color.GRAY);
@@ -66,32 +75,41 @@ public final class CalculatorShowHistoryPanel extends JPanel{
 	    	cardLayout.show(container, "history");
 	    });
 	    
-	    list.setFont(new Font("Dialog",Font.PLAIN,17));
 	    
+	    //ADD EVERYTHING TO THE MAIN PANEL
 		add(new JScrollPane(list), BorderLayout.CENTER);
 		add(backButton,BorderLayout.NORTH);
 		
+		
 		refreshHistory();
 		
+		
 		engine.setThemeListener(isDark->{
+			
 			if(isDark) {
+				
 				list.setBackground(Color.GRAY);
 				list.setForeground(Color.WHITE);
 				
 				backButton.setBackground(Color.GRAY);
 			    backButton.setForeground(Color.WHITE);
 			    backButton.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 2, true));
+			    
 			}else {
+				
 				list.setBackground(Color.WHITE);
 				list.setForeground(Color.DARK_GRAY);
 				
 				backButton.setBackground(Color.WHITE);
 			    backButton.setForeground(Color.DARK_GRAY);
 			    backButton.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2, true));
+			    
 			}
 		});
 		
+		
 	}
+	
 	
 	
 	public void refreshHistory() {
@@ -102,6 +120,7 @@ public final class CalculatorShowHistoryPanel extends JPanel{
             model.addElement(historyEntries.get(i));
         }
     }
+	
 	
 	
 	public void setCardLayout(CardLayout cardLayout, JPanel container) {

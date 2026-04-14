@@ -20,6 +20,7 @@ public final class CalculatorScientificPanel extends JPanel{
 	
 	
 	private final JLabel labelScientific = new JLabel("Scientific");
+	
 	private final JPanel panelButtons = new JPanel();
 	
 	private final String[] buttons = {  "π", "e","n!", "x^y","random",
@@ -29,12 +30,15 @@ public final class CalculatorScientificPanel extends JPanel{
 									 };
 
 	private final List<JButton> buttonsList = new ArrayList<>();
+	
 	private final CalculatorEngine engine;
+	
 	
 	public CalculatorScientificPanel(CalculatorEngine engine){
 		
 		this.engine = engine;
 		
+		//CUSTOMIZE MAIN PANEL
 		setLayout(new BorderLayout());
 		setBackground(Color.GRAY);
 		setPreferredSize(new Dimension(350,450));
@@ -54,19 +58,26 @@ public final class CalculatorScientificPanel extends JPanel{
 		panelButtons.setPreferredSize(new Dimension(350,300));
 		panelButtons.setBackground(Color.BLACK);
 		
+		
+		//ADD EVERYTHING TO THE MAIN PANEL
 		add(panelButtons,BorderLayout.SOUTH);
 		add(labelScientific,BorderLayout.NORTH);
+		
 		
 		engine.setThemeListener(isDark->{
 			if(isDark) changeToDark();
 			else changeToLight();
 		});
+		
+		
 	}
+	
 	
 	
 	public void testPress(String buttonPressed) {
 	    press(buttonPressed);
 	}
+	
 	
 	
 	private void customizeLabel(JLabel label) {
@@ -96,7 +107,6 @@ public final class CalculatorScientificPanel extends JPanel{
 	
 	
 	
-	
 	private void changeToDark(){
 		setBackground(Color.GRAY);
 		
@@ -110,6 +120,7 @@ public final class CalculatorScientificPanel extends JPanel{
 		
 		panelButtons.setBackground(Color.BLACK);
 	}
+	
 	
 	
 	private void changeToLight(){
@@ -129,7 +140,6 @@ public final class CalculatorScientificPanel extends JPanel{
 	
 	
 	
-	
 	private void press(String buttonPressed) {
 
 		if(buttonPressed==null)return;
@@ -137,7 +147,6 @@ public final class CalculatorScientificPanel extends JPanel{
 		switch (buttonPressed) {
 	        case "π":
 	        	engine.addScientificNumber("π");
-	            
 	            break;
 
 	        case "e":
