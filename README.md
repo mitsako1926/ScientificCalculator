@@ -117,7 +117,7 @@ Make sure you have Git installed. Open your terminal or command prompt and run:
 ```bash
 git clone https://github.com/mitsako1926/ScientificCalculator.git
 
-cd Calculator
+cd ScientificCalculator
 ```
 
 ---
