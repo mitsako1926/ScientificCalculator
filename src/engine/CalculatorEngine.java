@@ -60,7 +60,7 @@ public final class CalculatorEngine{
 	
 	
 	public List<HistoryEntity> getHistoryList(){
-		return new ArrayList<>(historyList);
+		return new ArrayList<HistoryEntity>(historyList);
 	}
 	
 	public String getDisplay() {

@@ -37,7 +37,7 @@ public class CalculatorHistoryPanel extends JPanel{
 	private CardLayout cardLayout;
 	private JPanel container;
 	
-	private final List<JButton> buttonsList = new ArrayList<>();
+	private final List<JButton> buttonsList = new ArrayList<JButton>();
 	
 	private final CalculatorEngine engine;
 	
@@ -71,7 +71,7 @@ public class CalculatorHistoryPanel extends JPanel{
 		panelImportExportButtons.setBackground(Color.GRAY);
 		
 		//BUTTONS
-		Map<String, Runnable> actions = new HashMap<>();
+		Map<String, Runnable> actions = new HashMap<String, Runnable>();
 
 		actions.put("Show History", () -> press("Show History"));
 		actions.put("Clear History", () -> press("Clear History"));
@@ -220,19 +220,14 @@ public class CalculatorHistoryPanel extends JPanel{
 	
 	
 	private void changeToDark() {
-		customizeLabel(labelHistory);
-		labelHistory.setFont(new Font("Arial",Font.BOLD,20));
-		labelHistory.setPreferredSize(new Dimension(250,70));
-
-		customizeLabel(labelManageHistory);
-
-		customizeLabel(labelImportExport);
-
-		customizePanel(panelManageHistory);
-		customizePanel(panelImportExport);
-				
-		panelManageHistoryButtons.setBackground(Color.GRAY);
-		panelImportExportButtons.setBackground(Color.GRAY);
+		
+		styleComponentDark(labelHistory);
+		styleComponentDark(labelManageHistory);
+		styleComponentDark(labelImportExport);
+		styleComponentDark(panelImportExport);
+		styleComponentDark(panelManageHistory);
+		styleComponentDark(panelManageHistoryButtons);
+		styleComponentDark(panelImportExportButtons);
 		
 		buttonsList.forEach((button)->{
 			button.setForeground(Color.WHITE);
@@ -245,13 +240,13 @@ public class CalculatorHistoryPanel extends JPanel{
 	
 	private void changeToLight() {
 
-		styleComponent(labelHistory);
-		styleComponent(labelManageHistory);
-		styleComponent(labelImportExport);
-		styleComponent(panelImportExport);
-		styleComponent(panelManageHistory);
-		styleComponent(panelManageHistoryButtons);
-		styleComponent(panelImportExportButtons);
+		styleComponentLight(labelHistory);
+		styleComponentLight(labelManageHistory);
+		styleComponentLight(labelImportExport);
+		styleComponentLight(panelImportExport);
+		styleComponentLight(panelManageHistory);
+		styleComponentLight(panelManageHistoryButtons);
+		styleComponentLight(panelImportExportButtons);
 		
 		buttonsList.forEach((button)->{
 			button.setForeground(Color.DARK_GRAY);
@@ -263,9 +258,16 @@ public class CalculatorHistoryPanel extends JPanel{
 	
 	
 	
-	private void styleComponent(JComponent comp) {
+	private void styleComponentLight(JComponent comp) {
 	    comp.setBackground(Color.WHITE);
 	    comp.setForeground(Color.DARK_GRAY);
+	}
+	
+	
+	
+	private void styleComponentDark(JComponent comp) {
+	    comp.setBackground(Color.GRAY);
+	    comp.setForeground(Color.WHITE);
 	}
 	
 	

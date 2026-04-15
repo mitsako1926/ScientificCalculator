@@ -26,7 +26,7 @@ public final class CalculatorPanel extends JPanel{
 	private final JLabel historyLabelUp,historyLabelDown;
 	private final JPanel panelDisplay,panelButtons;
 	
-	private List<JButton> buttonList = new ArrayList<>();
+	private List<JButton> buttonList = new ArrayList<JButton>();
 		
 	private final float baseFontSize,baseFontSizeHistoryUp,baseFontSizeHistoryDown;
 	
@@ -90,7 +90,7 @@ public final class CalculatorPanel extends JPanel{
 		
 		//COMPONENTS OF THE DISPLAY OF BUTTONS
 		
-		Map<String, Runnable> actions = new HashMap<>();
+		Map<String, Runnable> actions = new HashMap<String, Runnable>();
 
 		actions.put("C", () -> press("C"));
 		actions.put("≡", () -> press("≡"));
@@ -148,6 +148,7 @@ public final class CalculatorPanel extends JPanel{
 				styleComponentDark(historyLabelDown);
 				styleComponentDark(historyLabelUp);
 				styleComponentDark(textDisplay);
+				
 				panelButtons.setBackground(Color.black);
 				
 				buttonList.forEach((button)->{

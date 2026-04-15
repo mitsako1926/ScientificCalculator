@@ -40,7 +40,7 @@ public final class CalculatorGeneralPanel extends JPanel{
 	
 	private final JSlider fontSlider = new JSlider(0, 10, 5);
 	
-	private final JComboBox<String> decimalComboBox = new JComboBox<>(
+	private final JComboBox<String> decimalComboBox = new JComboBox<String>(
 	                            new String[]{"2", "4", "6", "8", "10"} );
 	
 	private final JRadioButton darkRadioButton = new JRadioButton("Dark");
@@ -260,38 +260,35 @@ public final class CalculatorGeneralPanel extends JPanel{
 	
 	private void changeToDark() {
 		//LABELS
-		customizeLabel(labelGeneral);
-		labelGeneral.setFont(new Font("Arial",Font.BOLD,20));
-		labelGeneral.setPreferredSize(new Dimension(350,70));
-		
-		customizeLabel(labelFont);
-		
-		customizeLabel(labelDecimal);
-		
-		customizeLabel(labelTheme);
+		styleComponentDark(labelGeneral);
+	    styleComponentDark(labelFont);
+	    styleComponentDark(labelDecimal);
+	    styleComponentDark(labelTheme);
 		
 		//BUTTONS
-		customizeButton(applyButton);
-		customizeButton(resetButton);
+	    styleButtonDark(applyButton);
+	    styleButtonDark(resetButton);
+	    
+		//PANELS
+	    styleComponentDark(panelButtons);
+	    styleComponentDark(panelSettings);
+	    styleComponentDark(panelFont);
+	    styleComponentDark(panelDecimal);
+	    styleComponentDark(panelTheme);
+	    styleComponentDark(comboWrapper);
 		
-		//OTHER
-		panelButtons.setBackground(Color.GRAY);
-		panelSettings.setBackground(Color.GRAY);
-		
-		customizePanel(panelFont);
-		customizeSlider(fontSlider);
-		
-		comboWrapper.setBackground(Color.GRAY);
-		customizePanel(panelDecimal);
-		customizeComboBox(decimalComboBox);
-		
-		customizePanel(panelTheme);
-		panelTheme.setLayout(new GridLayout(3, 1, 5, 5));
-		
-		customizeRadioButton(darkRadioButton);
-		customizeRadioButton(lightRadioButton);
-		
+		//RADIO BUTTONS
+	    styleComponentDark(darkRadioButton);
+	    styleComponentDark(lightRadioButton);
 		darkRadioButton.setSelected(true);
+		
+		//SLIDER
+		styleComponentDark(fontSlider);
+	    
+		//COMBOBOX
+		decimalComboBox.setBackground(Color.WHITE);
+		decimalComboBox.setForeground(Color.BLACK);
+
 	}
 	
 	
@@ -304,8 +301,8 @@ public final class CalculatorGeneralPanel extends JPanel{
 	    styleComponentLight(labelTheme);
 		
 		//BUTTONS
-	    styleButton(applyButton);
-	    styleButton(resetButton);
+	    styleButtonLight(applyButton);
+	    styleButtonLight(resetButton);
 	    
 		//PANELS
 	    styleComponentLight(panelButtons);
@@ -336,10 +333,25 @@ public final class CalculatorGeneralPanel extends JPanel{
 	
 	
 	
-	private void styleButton(JButton button) {
+	private void styleComponentDark(JComponent comp) {
+	    comp.setBackground(Color.GRAY);
+	    comp.setForeground(Color.WHITE);
+	}
+	
+	
+	
+	private void styleButtonLight(JButton button) {
 	    button.setBackground(Color.WHITE);
 	    button.setForeground(Color.DARK_GRAY);
 	    button.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2, true));
+	}
+	
+	
+	
+	private void styleButtonDark(JButton button) {
+	    button.setBackground(Color.GRAY);
+	    button.setForeground(Color.WHITE);
+	    button.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 2, true));
 	}
 	
 	

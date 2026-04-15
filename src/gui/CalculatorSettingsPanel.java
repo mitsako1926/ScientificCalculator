@@ -95,9 +95,9 @@ public class CalculatorSettingsPanel extends JPanel {
 		
 		panelButtons.setBackground(Color.GRAY);
 		
-		customizeButton(showGeneralButton,"general");
-        customizeButton(showHistoryButton,"history");
-        customizeButton(showScientificButton,"scientific");
+		styleComponentDark(showGeneralButton);
+		styleComponentDark(showHistoryButton);
+		styleComponentDark(showScientificButton);
     }
     
     
@@ -107,7 +107,16 @@ public class CalculatorSettingsPanel extends JPanel {
     	comp.setForeground(Color.DARK_GRAY);
     	comp.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2, true));
     }
+    
+    
+    
+    private void styleComponentDark(JComponent comp) {
+    	comp.setBackground(Color.GRAY);
+    	comp.setForeground(Color.WHITE);
+    	comp.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 2, true));
+    }
 	
+    
     
     
 }

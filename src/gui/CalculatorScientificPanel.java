@@ -29,7 +29,7 @@ public final class CalculatorScientificPanel extends JPanel{
 		    							"deg","asin", "acos", "atan", "acot"
 									 };
 
-	private final List<JButton> buttonsList = new ArrayList<>();
+	private final List<JButton> buttonsList = new ArrayList<JButton>();
 	
 	private final CalculatorEngine engine;
 	
@@ -74,11 +74,6 @@ public final class CalculatorScientificPanel extends JPanel{
 	
 	
 	
-	public void testPress(String buttonPressed) {
-	    press(buttonPressed);
-	}
-	
-	
 	
 	private void customizeLabel(JLabel label) {
 		label.setBackground(Color.GRAY);
@@ -110,7 +105,8 @@ public final class CalculatorScientificPanel extends JPanel{
 	private void changeToDark(){
 		setBackground(Color.GRAY);
 		
-		customizeLabel(labelScientific);
+		labelScientific.setBackground(Color.GRAY);
+		labelScientific.setForeground(Color.WHITE);
 		
 		buttonsList.forEach(button->{
 			button.setBackground(Color.GRAY);
