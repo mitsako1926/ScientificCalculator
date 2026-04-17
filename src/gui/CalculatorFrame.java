@@ -11,7 +11,7 @@ public final class CalculatorFrame extends JFrame{
 	
 	public CalculatorFrame() {
 		
-		ImageIcon imageIcon = new ImageIcon(getClass().getResource("/calculatorImage.jpg"));
+		ImageIcon imageIcon = new ImageIcon(getClass().getResource("/resources/calculatorImage.jpg"));
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

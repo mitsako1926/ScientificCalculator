@@ -19,7 +19,7 @@ public final class CalculatorSettingsFrame extends JFrame{
 	public CalculatorSettingsFrame(CalculatorEngine engine1) {
 		
 		//MAIN PANEL 
-		ImageIcon imageIcon = new ImageIcon(getClass().getResource("/settingsImage.jpg"));
+		ImageIcon imageIcon = new ImageIcon(getClass().getResource("/resources/settingsImage.jpg"));
 		setLayout(new BorderLayout());
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setResizable(false);
