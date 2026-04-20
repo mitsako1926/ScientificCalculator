@@ -3,6 +3,8 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Frame;
+import java.awt.Image;
+
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -20,12 +22,14 @@ public final class CalculatorSettingsFrame extends JFrame{
 		
 		//MAIN PANEL 
 		ImageIcon imageIcon = new ImageIcon(getClass().getResource("/resources/settingsImage.jpg"));
+		Image img = imageIcon.getImage().getScaledInstance(15, 15, Image.SCALE_SMOOTH);
+		
 		setLayout(new BorderLayout());
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setResizable(false);
 		setTitle("Settings");
 		setAlwaysOnTop(true);
-		setIconImage(imageIcon.getImage());
+		setIconImage(img);
 		
 		this.engine = engine1;
 		
