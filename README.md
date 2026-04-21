@@ -11,6 +11,22 @@ This is my **first GUI-based project**, focused on clean architecture, separatio
 
 ## 🚀 Features
 
+---
+
+## 🖼️ UI Preview
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/ecd8975c-dd27-45e3-af76-32311ceb1c5c" width="35%" />
+  <img src="https://github.com/user-attachments/assets/bd90f353-27d2-4d58-bb13-745a197f4ce0" width="45%" />
+</p>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/bef41ac3-a10b-41e2-8650-9812aca11d64" width="45%" />
+  <img src="https://github.com/user-attachments/assets/20b6e9d9-4b62-4060-b6e1-1cf7c9f03722" width="45%" />
+</p>
+
+
+---
+
 ### 🔢 Advanced Number Handling
 
 - Supports **integers and decimal numbers**
